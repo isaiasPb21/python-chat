@@ -1,0 +1,166 @@
+# Chat -- Tkinter -- Sockets
+from tkinter import *
+import socket
+from threading import Thread
+import time
+
+
+root = Tk()
+
+# Listas Utilizadas
+alfabeto = ['ª','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9',' ',',','.','+','-','*','/','\\','!','@','#','$','%','&','(',')']
+
+
+
+
+
+recebe = 'iiiadasd'
+#### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###          FUNÇÕES
+
+# Função Recebe, que é chamada utilizando Thread
+def mensagem ():
+   
+   host = '192.168.15.8'
+   port = 2121
+
+   add = (host, port)
+   serv_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+   serv_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+   serv_socket.bind(add)
+   serv_socket.listen(10)
+   #print('Aguardando conexão')
+
+   while True:
+      con, cliente = serv_socket.accept()
+      #print('CONECTADO')
+      #recebe = con, recv(2024)
+      #print('Aguardando mensagem')
+      recebe = con.recv(2024)
+      #print('Mensagem recebida : ', recebe)
+      #print('Mensagem recebida')
+      recebe = recebe.decode()
+      recebe = recebe.split('_')
+
+      
+      chaveN = 1073
+      chaveD = 1079
+      
+      recebeInt = []
+      codificadoRsaRecebimento = [] # -- Listas a serem utilziadas 
+      preCodificadoRecebimento = []
+      
+      print(recebe)
+      
+      # -- Transformando a variavel recebe em Int
+      for i in  recebe:
+         aux0 = int(i)
+         recebeInt.append(aux0)         
+      print(recebeInt)   
+      
+      # -- Decodificacao
+      for i in recebeInt: 
+         aux1 = (i ** chaveD) % chaveN
+         codificadoRsaRecebimento.append(aux1)
+      print(codificadoRsaRecebimento)
+         
+      # -- des pré Codificação
+      for i in codificadoRsaRecebimento:
+         aux2 = alfabeto[i // 10]
+         preCodificadoRecebimento.append(aux2)
+      print(preCodificadoRecebimento)
+
+      w = ' '.join(preCodificadoRecebimento)
+      print(w)
+         
+   
+      
+      listB.insert(END, 'Ele : '+ w) 
+      
+      if bool(recebe) is True:
+         pass      
+      time.sleep(2)
+      
+# Executa a função mensagem que fica escutando possiveis mensagens
+funcao1 = Thread (target=mensagem) 
+funcao1.start()
+
+# A cada click no botão enviar, ocorre o envio das mensagens
+def enviar():
+   listB.insert(END, 'Eu : '+ mensagem.get())
+   
+   ip = '192.168.15.3'
+   port = 2121
+   add = (ip, port)
+   
+   clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+   clientSocket.connect(add)
+
+   chaveE = 71
+   chaveN = 1073
+   
+   x = mensagem.get().lower()
+   x = list(x)
+   # Pré Cifragem
+   
+   preCodificadoEnvio = [] # -- Listas a serem utilziadas 
+   codificadoRsaEnvio = []
+   codificadoRsaStringEnvio = []
+
+   
+   for i in x:
+      aux3 = alfabeto.index(i) * 10
+      preCodificadoEnvio.append(aux3)
+
+   # Cifragem
+   for i in preCodificadoEnvio:
+      aux4 = (i ** chaveE) % chaveN
+      codificadoRsaEnvio.append(aux4)
+
+   for i in codificadoRsaEnvio:
+      aux5 = str(i)
+      codificadoRsaStringEnvio.append(aux5)
+      
+   codificadoRsaEnvio = '_'.join(codificadoRsaStringEnvio)
+   
+   
+   
+   clientSocket.sendto(codificadoRsaEnvio.encode(), (ip, port))
+   mensagem.delete(0, END)
+   clientSocket.close()
+   
+#### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###          FIM : FUNÇÕES
+
+   
+#### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###          FRAMES, LISTBOX, ENTRY, BOTAO
+   
+#  Frame Master
+frameM = Frame(root, bg="#f5f5f5") 
+frameM.pack(fill="both")
+
+# Frame Inside -- Dentro do Frame Top
+frameInside = Frame(frameM, bg="#f5f5f5") 
+frameInside.pack(fill="both", side =BOTTOM)
+
+# ListBox -- Aparece Mensagens
+listB = Listbox(frameM, bg="#ffffff", width=50, height=200) 
+listB.pack(side=TOP)
+
+if (recebe != None):
+   listB.insert(END, 'Outro : '+ recebe)
+   
+# Entry -- Digitar Mensagem   
+mensagem = Entry(frameInside, width=50, highlightcolor="green") 
+mensagem.pack(side=LEFT, padx=20, pady= 15)
+
+# Botão -- Enviar Mensagem
+enviar = Button(frameInside, width=5, highlightcolor="green", text="enviar", command=enviar) 
+enviar.pack(side=RIGHT)
+
+#### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###          FIM : FRAMES, LISTBOX, BOTAO
+
+
+root.geometry("500x500")
+root.mainloop()
+
+
