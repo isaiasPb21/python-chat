@@ -4,15 +4,10 @@ import socket
 from threading import Thread
 import time
 
-
 root = Tk()
 
 # Listas Utilizadas
 alfabeto = ['ª','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9',' ',',','.','+','-','*','/','\\','!','@','#','$','%','&','(',')']
-
-
-
-
 
 recebe = 'iiiadasd'
 #### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###          FUNÇÕES
@@ -41,7 +36,6 @@ def mensagem ():
       #print('Mensagem recebida')
       recebe = recebe.decode()
       recebe = recebe.split('_')
-
       
       chaveN = 1073
       chaveD = 1079
@@ -50,29 +44,28 @@ def mensagem ():
       codificadoRsaRecebimento = [] # -- Listas a serem utilziadas 
       preCodificadoRecebimento = []
       
-      print(recebe)
+      print(recebe)                               # Teste funcionamento da lista
       
       # -- Transformando a variavel recebe em Int
       for i in  recebe:
          aux0 = int(i)
          recebeInt.append(aux0)         
-      print(recebeInt)   
+      print(recebeInt)                            # Teste funcionamento da lista
       
       # -- Decodificacao
       for i in recebeInt: 
          aux1 = (i ** chaveD) % chaveN
          codificadoRsaRecebimento.append(aux1)
-      print(codificadoRsaRecebimento)
+      print(codificadoRsaRecebimento)             # Teste funcionamento da lista
          
       # -- des pré Codificação
       for i in codificadoRsaRecebimento:
          aux2 = alfabeto[i // 10]
          preCodificadoRecebimento.append(aux2)
-      print(preCodificadoRecebimento)
+      print(preCodificadoRecebimento)              # Teste funcionamento da lista
 
       w = ' '.join(preCodificadoRecebimento)
-      print(w)
-         
+      print(w)                                     # Teste funcionamento da lista
    
       
       listB.insert(END, 'Ele : '+ w) 
