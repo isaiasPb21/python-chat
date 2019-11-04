@@ -15,7 +15,7 @@ recebe = 'iiiadasd'
 # Função Recebe, que é chamada utilizando Thread
 def mensagem ():
    
-   host = '192.168.15.8'
+   host = 'xxx.xxx.xx.x'
    port = 2121
 
    add = (host, port)
@@ -82,7 +82,7 @@ funcao1.start()
 def enviar():
    listB.insert(END, 'Eu : '+ mensagem.get())
    
-   ip = '192.168.15.3'
+   ip = 'xxx.xxx.xx.x'
    port = 2121
    add = (ip, port)
    
