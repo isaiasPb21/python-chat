@@ -1,0 +1,22 @@
+from tkinter import *
+
+root = Tk()
+
+t = 'Texto teste'                   # -- Texto teste
+
+frame = Frame(root, bg="lightblue")
+frame.pack(fill="both")
+
+m = Label(frame, anchor=E, justify=RIGHT, text=t, bg="lightblue", height=2, width=50)
+m.pack()
+
+m1 = Label(frame,  anchor=W, justify=LEFT, relief="groove",text=t, bg="#dcdcdc", height=2, width=50)
+m1.pack()
+
+m2 = Label(frame, anchor=E, justify=LEFT, text=t, bg="lightblue", height=2, width=50)
+m2.pack()
+
+
+root.config(bg="lightblue")
+root.geometry('420x600')
+root.mainloop()
