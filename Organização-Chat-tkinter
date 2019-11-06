@@ -1,0 +1,72 @@
+from threading import *   
+from datetime import *
+from tkinter import *
+from tkinter import ttk
+import socket
+
+
+# *************************************************************************************************************************************
+class Aplicacao ():
+    def __init__(self, master=None):
+        self.fontePadrao = ("Arial", "13")
+        
+        self.menu = Menu(master)                                                                                                                 # Criar Barra de Menu 
+
+        self.menuArquivos = Menu(self.menu)                                                                                              #Criar "Botão"                                                                                                
+        self.menuArquivos.add_command(label="Abrir")                                                                             # adicionar comandos ao Menu
+        self.menuArquivos.add_command(label="Salvar")                                                                          #adicionar comandos ao Menu 
+        self.menuArquivos.add_separator()                                                                                                  # adicionar separador ao menu
+        self.menuArquivos.add_command(label="Fechar")                                                                         # adicionar comando ao Menu
+        self.menu.add_cascade(label="Arquivos", menu=self.menuArquivos)                                       # Criar Botão no menu
+
+        self.menuConfiguracoes = Menu(self.menu)                                  
+        self.menuConfiguracoes.add_command(label="Undo            ")
+        self.menuConfiguracoes.add_command(label="Redo            ")
+        self.menu.add_cascade(label="Configurações", menu=self.menuConfiguracoes)
+        
+        master.config(menu=self.menu)
+        # *********************************************************************************************************************************
+        self.frameM = Frame(master, bg="lightblue", pady=12, padx=10)                                  # Frame PRINCIPAL
+        self.frameM["relief"] = RIDGE                                                                                                   # Criar Borda
+        self.frameM["borderwidth"] = 2                                                                                               # espessura da borda
+        self.frameM.pack(fill="both")
+        # *********************************************************************************************************************************
+        self.framePatent = Frame(self.frameM, bg="lightgreen", pady=12, padx=10)                                  # Frame PRINCIPAL
+        self.framePatent["relief"] = RIDGE                                                                                                   # Criar Borda
+        self.framePatent["borderwidth"] = 2                                                                                               # espessura da borda
+        self.framePatent.pack(side=TOP)
+        # *********************************************************************************************************************************
+        self.exibeMensagens
+
+
+        # *********************************************************************************************************************************
+        self.frameContent = Frame(self.frameM, bg="orange", pady=12, padx=10)                                  # Frame PRINCIPAL
+        self.frameContent["relief"] = RIDGE                                                                                                   # Criar Borda
+        self.frameContent["borderwidth"] = 2                                                                                               # espessura da borda
+        self.frameContent.pack(side=BOTTOM)
+        # *********************************************************************************************************************************
+        self.patent = ttk.Combobox(self.framePatent, values=["1", "2", "3", "4", "5", "6"])        
+        self.patent.pack()
+        # *********************************************************************************************************************************
+        listB = Listbox(self.frameM, bg="#ffffff", width=40, height=50)
+        listB.pack(side=BOTTOM)
+        # *********************************************************************************************************************************
+        mensagem = Entry(self.frameContent, width=40, highlightcolor="green") 
+        mensagem.pack(side=LEFT, padx=20, pady= 15, ipady=8)
+
+        enviar = Button(self.frameContent, width=5, highlightcolor="green", text="enviar") 
+        enviar.pack(side=RIGHT)
+
+
+        def enviarMensagens():
+            pass
+      
+            '''if self.patent.get() == '1':
+                print('shit')'''
+
+
+root = Tk()
+root.geometry("550x550+250+100")
+root.configure(background="lightgray")
+Aplicacao(root)
+root.mainloop()
