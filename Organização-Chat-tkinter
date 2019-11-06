@@ -36,8 +36,11 @@ class Aplicacao ():
         self.framePatent["borderwidth"] = 2                                                                                               # espessura da borda
         self.framePatent.pack(side=TOP)
         # *********************************************************************************************************************************
-        self.exibeMensagens
-
+        
+        self.exibeMensagens = Frame(self.frameM, bg="darkblue", pady=10, padx=10)
+        self.exibeMensagens["relief"] = RIDGE                                                                                                   # Criar Borda
+        self.exibeMensagens["borderwidth"] = 2                                                                                               # espessura da borda
+        self.exibeMensagens.pack(side=BOTTOM)      
 
         # *********************************************************************************************************************************
         self.frameContent = Frame(self.frameM, bg="orange", pady=12, padx=10)                                  # Frame PRINCIPAL
