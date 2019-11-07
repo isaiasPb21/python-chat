@@ -1,0 +1,29 @@
+import random
+
+def num(x, y):
+  if (x == y):
+    y += 250    
+  return x, y
+
+def keyD():
+  pass
+
+def arrumaNone():
+  a = random.randint(1, 12)
+  b = random.randint(1, 12)
+
+  # keyD
+
+  return a, b
+
+
+a = random.randint(1, 12)
+b = random.randint(1, 12)
+
+
+print(num(a, b))
+
+c = None
+
+if (c == None):
+  arrumaNone()
