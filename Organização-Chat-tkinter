@@ -95,22 +95,40 @@ class Aplicacao ():
             self.l3 = Label(self.frameMB, text=" >> Deseja prosseguir ? [S / N]", bg="black", fg="red").pack(side=LEFT)
 
             self.e = Entry(self.frameMB, width=2, bg="#000", fg="red")
-            self.e.bind("<Return>", avancarTela)
+            self.e.bind("<Return>", perguntaChave)
             self.e.focus_set()
             self.e.pack(side=LEFT)  
 
-        def avancarTela(event):
+
+        def perguntaChave(event):
             self.x = self.e.get()
             if (self.x[0] == 'S') or (self.x[0] == 's'):
                  print('Prosseguindo ... ')
-                 criaWidgetsEnvio()
-            else:
-                 print('Fechando ... ')
-                 master.destroy()
+                 
+                 self.frameMBD = Frame(master, bg="yellow").pack(side=BOTTOM)
+                
+                 self.l4 = Label(self.frameMBD, text=" >> Deseja inserir as chaves púlicas ? [S / N]", bg="black", fg="red").pack(side=LEFT)
 
-        def criaWidgetsEnvio():
+                 self.e2 = Entry(self.frameMBD, width=2, bg="#000", fg="red")
+                 #self.e2.bind("<Return>", camposPreencherChave)
+                 self.e2.focus_set()
+                 self.e2.pack(side=LEFT)
+                 avancarTela()
+            else:
+                 print('Gera as chaves automaticamente ... ')
+                 
+            def camposPreencherChave():
+                pass
+            
+            
+        '''def criaWidgetsEnvio():
             root.geometry("400x400+250+100")
-            self.frameMB
+            self.frameMB.pack_forget()
+            self.frameExibeMensagem = Frame(master).pack(side=TOP)
+            self.frameEnviaMensagem = Frame(master).pack(side=BOTTOM)'''
+        def avancarTela():
+            pass
+
            
         # ********************************************************************************************************************************* 
 
@@ -140,7 +158,7 @@ class Aplicacao ():
         self.frameMB = Frame(master, bg="blue", pady=12, padx=10)                                  
         self.frameMB["relief"] = RIDGE                                                                                                   
         self.frameMB["borderwidth"] = 2                                                                                                
-        self.frameMB.pack(fill="both")        
+        self.frameMB.pack(side=TOP, fill="both")        
         # *********************************************************************************************************************************                
         self.listB = Listbox(self.frameM, borderwidth = 0, highlightthickness = 0, selectbackground="#f5f5f5", bg="#000", fg="red", width=40, height=15, selectmode=SINGLE)
         self.listB.bind('<<ListboxSelect>>', curSelect)
