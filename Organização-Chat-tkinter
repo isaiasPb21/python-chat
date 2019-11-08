@@ -15,7 +15,9 @@ class Aplicacao ():
         # *********************************************************************************************************************************     
         def ir():
             pass
-
+        # *********************************************************************************************************************************        
+        # *********************************************************************************************************************************        
+      
         # *********************************************************************************************************************************        
         def recebeMensagem ():
             
@@ -67,11 +69,51 @@ class Aplicacao ():
                 print('Mensagem Original : ', mensagemOriginal)   #
 
         # ********************************************************************************************************************************* 
-        # ********************************************************************************************************************************* 
-        # ********************************************************************************************************************************* 
-
         funcao1 = Thread (target=recebeMensagem) 
         funcao1.start()
+        # ********************************************************************************************************************************* 
+        def enviarMensagens():
+           
+           ip = '192.168.15.3'
+           port = 2121
+           add = (ip, port)
+           
+           clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+           clientSocket.connect(add)
+
+           chaveE = 71
+           chaveN = 1073
+
+           x =  mensagem.get().lower()   
+           x = list(x)
+           
+           # Pré Cifragem   
+           preCodificadoEnvio = []      
+           codificadoRsaEnvio = []
+           codificadoRsaStringEnvio = []
+           
+           for i in x:
+              aux3 = alfabeto.index(i) * 10
+              preCodificadoEnvio.append(aux3)
+
+           # Cifragem
+           for i in preCodificadoEnvio:
+              aux4 = (i ** chaveE) % chaveN
+              codificadoRsaEnvio.append(aux4)
+
+           for i in codificadoRsaEnvio:
+              aux5 = str(i)
+              codificadoRsaStringEnvio.append(aux5)
+              
+           codificadoRsaEnvio = '_'.join(codificadoRsaStringEnvio)    
+           
+           clientSocket.sendto(codificadoRsaEnvio.encode(), (ip, port))
+           mensagem.delete(0, END)
+           clientSocket.close()
+
+        # ********************************************************************************************************************************* 
+
+
 
         # ********************************************************************************************************************************* 
         def curSelect(event):            
@@ -83,15 +125,15 @@ class Aplicacao ():
             else :
                 picked = self.listB.get(selection)
                 print(picked)                                                                   #
-                print('indice : ', selection, 'patente : ', picked)      #         
+                print('indice : ', selection, 'patente : ', picked)           #         
 
                 tela_label_entry()        
                 self.frameM.pack_forget()
 
         # ********************************************************************************************************************************* 
-        # Passo - 1
+        # Passo - 1 -- envent '<Return>' -> função perguntaChave
         def tela_label_entry():           
-            self.l1 = Label(self.frameMB, anchor=W, text='Open : ' + horario, bg="black", fg="red").pack(fill=X)
+            self.l1 = Label(self.frameMB, anchor=W, text='Open : ' + horario + ' s', bg="black", fg="red").pack(fill=X)
             self.l2 = Label(self.frameMB, anchor=W, text=" >> Ola, seja bem vindo Senhor", bg="black", fg="red").pack(fill=X)
             self.l3 = Label(self.frameMB, text=" >> Deseja prosseguir ? [S / N]", bg="black", fg="red").pack(side=LEFT)
 
@@ -101,9 +143,10 @@ class Aplicacao ():
             self.e.pack(side=LEFT)  
 
         # ********************************************************************************************************************************* 
-        
+        # Passo - 2 -- event '<Return>' -> função camposPreencherChave
         def perguntaChave(event):
-            
+            # --- --- --- --- --- --- --- --- --- 
+            # Passo - 3 -- event '<Return>' -> função passarPara_e4
             def camposPreencherChave(event):
            
                 self.x = ''
@@ -121,15 +164,17 @@ class Aplicacao ():
                     print('Gerar Chaves')
                     #gerarChaves()
                     
-          # ********************************************************************************************************************************* 
-           # Passo - 2
-            def passarPara_e4(event):
+            # Passo - 4 -- event '<Return>' -> função chavesPublicas
+            def passarPara_e4(event):                                                                      # Event -- focus_set() -> e4 (Entry 04) 
 
-                # Passo - 
-                def chavesPublicas(event):
+                # --- --- --- --- --- --- --- --- --- 
+                # Return Chaves Públicas 
+                def chavesPublicas(event):                                                                  # Setando chaves públicas
                     
                     chaveE = int(self.e3.get())
                     chaveN = int(self.e4.get())
+                    print(chaveE)
+                    print(chaveN)
                     # return                    
                                        
                 self.l6 = Label(self.frameMBDKG, text=">> Insira a chave pública geral : ")
@@ -139,20 +184,20 @@ class Aplicacao ():
                 self.e4.bind("<Return>", chavesPublicas)
                 self.e4.focus_set()
                 self.e4.pack(side=LEFT)
+                # --- --- --- --- --- --- --- --- ---
                 
-            self.x = self.e.get()
-            
-            if (self.x[0] == 'S') or (self.x[0] == 's'):
+            self.x = self.e.get()                                                                                         # Obtedo valor de [S/N] -- Frame 1
+            if (self.x[0] == 'S') or (self.x[0] == 's'):                                                         # Caso "Prosseguir" seja  [S]  
                 
                  print('Prosseguindo ... ')
              
-                 self.frameMBD = Frame(master, bg="orange", pady=12, padx=10)
+                 self.frameMBD = Frame(master, bg="orange", pady=12, padx=10) # Frame 2 -- Deseja inserir Chave
                  self.frameMBD.pack(side=TOP, fill="both")
 
-                 self.frameMBDK = Frame(master, bg="yellow", pady=12, padx=10)
+                 self.frameMBDK = Frame(master, bg="yellow", pady=12, padx=10) # Frame 3 -- Chave Pública
                  self.frameMBDK.pack(side=TOP, fill="both")
 
-                 self.frameMBDKG = Frame(master, bg="gray", pady=12, padx=10)
+                 self.frameMBDKG = Frame(master, bg="gray", pady=12, padx=10) # Frame 4 -- Chave Pública Geral
                  self.frameMBDKG.pack(side=TOP, fill="both")
                                  
                  self.l4 = Label(self.frameMBD, text=" >> Deseja inserir as chaves púlicas ? [S / N]", bg="black", fg="red").pack(side=LEFT)
@@ -162,7 +207,7 @@ class Aplicacao ():
                  self.e2.focus_set()
                  self.e2.pack(side=LEFT)        
             
-            else:
+            else:                                                                                                                     # Caso "Prosseguir"  não seja  [S]  
                 
                  print(' Saindo ... ')
                  master.destroy()
@@ -172,14 +217,14 @@ class Aplicacao ():
         # ********************************************************************************************************************************* 
         
         # ********************************************************************************************************************************* 
-        self.menu = Menu(master)                                                                                                                 # Criar Barra de Menu 
+        self.menu = Menu(master)                                                                                                                 #  
 
-        self.menuArquivos = Menu(self.menu)                                                                                              #Criar "Botão"                                                                                                
-        self.menuArquivos.add_command(label="Inserir Chave", command=ir)                                     # adicionar comandos ao Menu
-        self.menuArquivos.add_command(label="Salvar")                                                                          #adicionar comandos ao Menu 
-        self.menuArquivos.add_separator()                                                                                                  # adicionar separador ao menu
-        self.menuArquivos.add_command(label="Fechar")                                                                         # adicionar comando ao Menu
-        self.menu.add_cascade(label="Arquivos", menu=self.menuArquivos)                                       # Criar Botão no menu
+        self.menuArquivos = Menu(self.menu)                                                                                              #                                                                                                
+        self.menuArquivos.add_command(label="Inserir Chave", command=ir)                                     
+        self.menuArquivos.add_command(label="Salvar")                                                                          
+        self.menuArquivos.add_separator()                                                                                                  
+        self.menuArquivos.add_command(label="Fechar")                                                                         
+        self.menu.add_cascade(label="Arquivos", menu=self.menuArquivos)                                      
 
         self.menuConfiguracoes = Menu(self.menu)                                  
         self.menuConfiguracoes.add_command(label="Criptografia    ")
@@ -212,10 +257,6 @@ class Aplicacao ():
         horario = datetime.now()
         horario = horario.strftime('%H:%M %Y %S')
         # ********************************************************************************************************************************* 
-       
-
-
-
         # *********************************************************************************************************************************  
         '''self.listB.insert(0, 'Open : ' + horario)
         self.listB.insert(END, '')
