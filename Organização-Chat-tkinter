@@ -89,6 +89,7 @@ class Aplicacao ():
                 self.frameM.pack_forget()
 
         # ********************************************************************************************************************************* 
+        # Passo - 1
         def tela_label_entry():           
             self.l1 = Label(self.frameMB, anchor=W, text='Open : ' + horario, bg="black", fg="red").pack(fill=X)
             self.l2 = Label(self.frameMB, anchor=W, text=" >> Ola, seja bem vindo Senhor", bg="black", fg="red").pack(fill=X)
@@ -99,41 +100,76 @@ class Aplicacao ():
             self.e.focus_set()
             self.e.pack(side=LEFT)  
 
-
+        # ********************************************************************************************************************************* 
+        
         def perguntaChave(event):
-            self.x = self.e.get()
-            if (self.x[0] == 'S') or (self.x[0] == 's'):
-                 print('Prosseguindo ... ')
-                 
-                 self.frameMBD = Frame(master, bg="yellow").pack(side=BOTTOM)
+            
+            def camposPreencherChave(event):
+           
+                self.x = ''
+                self.x = self.e2.get()
                 
+                if (self.x[0] == 'S') or (self.x[0] == 's'):                                                 
+                    self.l5 = Label(self.frameMBDK, anchor=W, text=">> Insira a chave pública : ")
+                    self.l5.pack(side=LEFT, fill=X)
+                    
+                    self.e3 = Entry(self.frameMBDK, width=2, bg="yellow", fg="red")
+                    self.e3.bind("<Return>", passarPara_e4)
+                    self.e3.focus_set()
+                    self.e3.pack(side=LEFT, fill=X)              
+                else:
+                    print('Gerar Chaves')
+                    #gerarChaves()
+                    
+          # ********************************************************************************************************************************* 
+           # Passo - 2
+            def passarPara_e4(event):
+
+                # Passo - 
+                def chavesPublicas(event):
+                    
+                    chaveE = int(self.e3.get())
+                    chaveN = int(self.e4.get())
+                    # return                    
+                                       
+                self.l6 = Label(self.frameMBDKG, text=">> Insira a chave pública geral : ")
+                self.l6.pack(side=LEFT, fill=X)
+                
+                self.e4 = Entry(self.frameMBDKG, width=2, bg="blue", fg="red")
+                self.e4.bind("<Return>", chavesPublicas)
+                self.e4.focus_set()
+                self.e4.pack(side=LEFT)
+                
+            self.x = self.e.get()
+            
+            if (self.x[0] == 'S') or (self.x[0] == 's'):
+                
+                 print('Prosseguindo ... ')
+             
+                 self.frameMBD = Frame(master, bg="orange", pady=12, padx=10)
+                 self.frameMBD.pack(side=TOP, fill="both")
+
+                 self.frameMBDK = Frame(master, bg="yellow", pady=12, padx=10)
+                 self.frameMBDK.pack(side=TOP, fill="both")
+
+                 self.frameMBDKG = Frame(master, bg="gray", pady=12, padx=10)
+                 self.frameMBDKG.pack(side=TOP, fill="both")
+                                 
                  self.l4 = Label(self.frameMBD, text=" >> Deseja inserir as chaves púlicas ? [S / N]", bg="black", fg="red").pack(side=LEFT)
 
                  self.e2 = Entry(self.frameMBD, width=2, bg="#000", fg="red")
-                 #self.e2.bind("<Return>", camposPreencherChave)
+                 self.e2.bind("<Return>", camposPreencherChave)
                  self.e2.focus_set()
-                 self.e2.pack(side=LEFT)
-                 avancarTela()
+                 self.e2.pack(side=LEFT)        
+            
             else:
-                 print('Gera as chaves automaticamente ... ')
-                 
-            def camposPreencherChave():
-                pass
-            
-            
-        '''def criaWidgetsEnvio():
-            root.geometry("400x400+250+100")
-            self.frameMB.pack_forget()
-            self.frameExibeMensagem = Frame(master).pack(side=TOP)
-            self.frameEnviaMensagem = Frame(master).pack(side=BOTTOM)'''
-        def avancarTela():
-            pass
-
+                
+                 print(' Saindo ... ')
+                 master.destroy()
            
         # ********************************************************************************************************************************* 
 
         # ********************************************************************************************************************************* 
-   
         
         # ********************************************************************************************************************************* 
         self.menu = Menu(master)                                                                                                                 # Criar Barra de Menu 
@@ -194,3 +230,9 @@ root.geometry("550x550+250+100")
 root.configure(background="black")
 Aplicacao(root)
 root.mainloop()
+
+'''def criaWidgetsEnvio():
+            root.geometry("400x400+250+100")
+            self.frameMB.pack_forget()
+            self.frameExibeMensagem = Frame(master).pack(side=TOP)
+            self.frameEnviaMensagem = Frame(master).pack(side=BOTTOM)'''
