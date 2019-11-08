@@ -47,7 +47,7 @@ class Aplicacao ():
         # ********************************************************************************************************************************* 
 
         # ********************************************************************************************************************************* 
-        def enviarMensagens():
+        def enviarMensagens(event):
            
            ip = '192.168.15.3'
            port = 2121
@@ -56,13 +56,11 @@ class Aplicacao ():
            clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
            clientSocket.connect(add)
 
-           chaveE = 71
-           chaveN = 1073
+           # Mensagem
 
-           x =  mensagem.get().lower()              
+           x =  self.mensagem.get().lower()              
            
-           clientSocket.sendto(x.encode(), (ip, port))
-           mensagem.delete(0, END)
+           clientSocket.sendto(x.encode(), (ip, port))           
            clientSocket.close()
 
         # ********************************************************************************************************************************* 
@@ -125,11 +123,24 @@ class Aplicacao ():
                 # Return Chaves Públicas 
                 def chavesPublicas(event):                                                                  # Setando chaves públicas
 
+                    # Limpando a tela                    
+                    self.frameMBD.pack_forget()
+                    self.frameMBDK.pack_forget()
+                    self.frameMBDKG.pack_forget()
                     
                     chaveE = int(self.e3.get())
                     chaveN = int(self.e4.get())
                     print(chaveE)
                     print(chaveN)
+
+                    self.content = Frame(master, bg="green").pack(side=TOP, pady= 200, padx= 10)
+
+                    self.mensagem = Entry(self.content, width=68)
+                    self.mensagem.bind("<Return>", enviarMensagens)
+                    self.mensagem["text"] = ''
+                    self.mensagem.pack(side=LEFT,ipady=5)
+
+                    
                     # return                    
                                        
                 self.l6 = Label(self.frameMBDKG, text=">> Insira a chave pública geral : ")
