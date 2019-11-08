@@ -31,46 +31,21 @@ class Aplicacao ():
             serv_socket.bind(add)
             serv_socket.listen(10)
 
+            
+            self.menu.add_cascade(label="Visible")
+            
             while True:
                 con, cliente = serv_socket.accept()
                 recebe = con.recv(2024)
                 recebe = recebe.decode()
-                recebe = recebe.split('_')
-
-                chaveN = 1073
-                chaveD = 1079
-
-                recebeInt = []
-                codificadoRsaRecebimento = []
-                preCodificadoRecebimento = []
-
-                print(recebe)  #
                 
-                # -- Transformando a variavel recebe(c) em Inteiros
-                for i in  recebe:
-                    aux0 = int(i)
-                    recebeInt.append(aux0)         
-                    print(recebeInt)  #                        
-                  
-                # -- Decodificacao
-                for i in recebeInt:
-                    aux1 = (i ** chaveD) % chaveN
-                    codificadoRsaRecebimento.append(aux1)
-                    print(codificadoRsaRecebimento)  #
-                     
-                # -- des pré Codificação
-                for i in codificadoRsaRecebimento:
-                    aux2 = alfabeto[i // 10]
-                    preCodificadoRecebimento.append(aux2)
-                    print(preCodificadoRecebimento)   #
 
-                # -- Reajuntando a mensagem
-                mensagemOriginal = ''.join(preCodificadoRecebimento)
-                print('Mensagem Original : ', mensagemOriginal)   #
+                # Chaves para decodificacao
+         
+                print('Mensagem Original : ', recebe)   #
 
         # ********************************************************************************************************************************* 
-        funcao1 = Thread (target=recebeMensagem) 
-        funcao1.start()
+
         # ********************************************************************************************************************************* 
         def enviarMensagens():
            
@@ -84,30 +59,9 @@ class Aplicacao ():
            chaveE = 71
            chaveN = 1073
 
-           x =  mensagem.get().lower()   
-           x = list(x)
+           x =  mensagem.get().lower()              
            
-           # Pré Cifragem   
-           preCodificadoEnvio = []      
-           codificadoRsaEnvio = []
-           codificadoRsaStringEnvio = []
-           
-           for i in x:
-              aux3 = alfabeto.index(i) * 10
-              preCodificadoEnvio.append(aux3)
-
-           # Cifragem
-           for i in preCodificadoEnvio:
-              aux4 = (i ** chaveE) % chaveN
-              codificadoRsaEnvio.append(aux4)
-
-           for i in codificadoRsaEnvio:
-              aux5 = str(i)
-              codificadoRsaStringEnvio.append(aux5)
-              
-           codificadoRsaEnvio = '_'.join(codificadoRsaStringEnvio)    
-           
-           clientSocket.sendto(codificadoRsaEnvio.encode(), (ip, port))
+           clientSocket.sendto(x.encode(), (ip, port))
            mensagem.delete(0, END)
            clientSocket.close()
 
@@ -156,7 +110,7 @@ class Aplicacao ():
                     self.l5 = Label(self.frameMBDK, anchor=W, text=">> Insira a chave pública : ")
                     self.l5.pack(side=LEFT, fill=X)
                     
-                    self.e3 = Entry(self.frameMBDK, width=2, bg="yellow", fg="red")
+                    self.e3 = Entry(self.frameMBDK, width=20, bg="yellow", fg="red")
                     self.e3.bind("<Return>", passarPara_e4)
                     self.e3.focus_set()
                     self.e3.pack(side=LEFT, fill=X)              
@@ -170,6 +124,7 @@ class Aplicacao ():
                 # --- --- --- --- --- --- --- --- --- 
                 # Return Chaves Públicas 
                 def chavesPublicas(event):                                                                  # Setando chaves públicas
+
                     
                     chaveE = int(self.e3.get())
                     chaveN = int(self.e4.get())
@@ -180,15 +135,19 @@ class Aplicacao ():
                 self.l6 = Label(self.frameMBDKG, text=">> Insira a chave pública geral : ")
                 self.l6.pack(side=LEFT, fill=X)
                 
-                self.e4 = Entry(self.frameMBDKG, width=2, bg="blue", fg="red")
+                self.e4 = Entry(self.frameMBDKG, width=20, bg="blue", fg="red")
                 self.e4.bind("<Return>", chavesPublicas)
                 self.e4.focus_set()
                 self.e4.pack(side=LEFT)
                 # --- --- --- --- --- --- --- --- ---
+
                 
             self.x = self.e.get()                                                                                         # Obtedo valor de [S/N] -- Frame 1
             if (self.x[0] == 'S') or (self.x[0] == 's'):                                                         # Caso "Prosseguir" seja  [S]  
-                
+
+                 funcao1 = Thread (target=recebeMensagem)                                    # Inicia o Thread 
+                 funcao1.start()
+                 
                  print('Prosseguindo ... ')
              
                  self.frameMBD = Frame(master, bg="orange", pady=12, padx=10) # Frame 2 -- Deseja inserir Chave
