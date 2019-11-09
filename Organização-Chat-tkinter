@@ -1,6 +1,7 @@
 from threading import *   
 from datetime import *
 from tkinter import *
+from tkinter import messagebox  
 import socket
 import time
 
@@ -39,6 +40,13 @@ class Aplicacao ():
                 recebe = con.recv(2024)
                 recebe = recebe.decode()
                 
+                def messageAppear():
+                    return  messagebox.askquestion("Message " + horarioAtual (),"Shows ?")
+                if (messageAppear()) == 'no' :
+                    print('Conteúdo Oculto')
+                else:
+                    print(messageAppear()) #
+                    print(recebe)
 
                 # Chaves para decodificacao
          
@@ -55,12 +63,13 @@ class Aplicacao ():
            
            clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
            clientSocket.connect(add)
-
+           
            # Mensagem
 
            x =  self.mensagem.get().lower()              
            
-           clientSocket.sendto(x.encode(), (ip, port))           
+           clientSocket.sendto(x.encode(), (ip, port))
+           self.mensagem.delete(0, END)
            clientSocket.close()
 
         # ********************************************************************************************************************************* 
@@ -85,7 +94,7 @@ class Aplicacao ():
         # ********************************************************************************************************************************* 
         # Passo - 1 -- envent '<Return>' -> função perguntaChave
         def tela_label_entry():           
-            self.l1 = Label(self.frameMB, anchor=W, text='Open : ' + horario + ' s', bg="black", fg="red").pack(fill=X)
+            self.l1 = Label(self.frameMB, anchor=W, text='Open : ' + horarioAtual () + ' s', bg="black", fg="red").pack(fill=X)
             self.l2 = Label(self.frameMB, anchor=W, text=" >> Ola, seja bem vindo Senhor", bg="black", fg="red").pack(fill=X)
             self.l3 = Label(self.frameMB, text=" >> Deseja prosseguir ? [S / N]", bg="black", fg="red").pack(side=LEFT)
 
@@ -104,17 +113,22 @@ class Aplicacao ():
                 self.x = ''
                 self.x = self.e2.get()
                 
-                if (self.x[0] == 'S') or (self.x[0] == 's'):                                                 
+                if (self.x[0] == 'S') or (self.x[0] == 's'):
                     self.l5 = Label(self.frameMBDK, anchor=W, text=">> Insira a chave pública : ")
                     self.l5.pack(side=LEFT, fill=X)
-                    
-                    self.e3 = Entry(self.frameMBDK, width=20, bg="yellow", fg="red")
+                
+                    self.e3 = Entry(self.frameMBDK, width=20, bg="yellow", fg="red")                    
                     self.e3.bind("<Return>", passarPara_e4)
                     self.e3.focus_set()
-                    self.e3.pack(side=LEFT, fill=X)              
+                    self.e3.pack(side=LEFT, fill=X)    
+                    
                 else:
                     print('Gerar Chaves')
-                    #gerarChaves()
+                    
+                    #gerarChaves()                                   
+            
+          
+
                     
             # Passo - 4 -- event '<Return>' -> função chavesPublicas
             def passarPara_e4(event):                                                                      # Event -- focus_set() -> e4 (Entry 04) 
@@ -123,21 +137,26 @@ class Aplicacao ():
                 # Return Chaves Públicas 
                 def chavesPublicas(event):                                                                  # Setando chaves públicas
 
-                    # Limpando a tela                    
+                    # Limpando a tela
+                    self.frameMB.pack_forget()
                     self.frameMBD.pack_forget()
                     self.frameMBDK.pack_forget()
                     self.frameMBDKG.pack_forget()
                     
-                    chaveE = int(self.e3.get())
-                    chaveN = int(self.e4.get())
+                    chaveE = self.e3.get()
+                    chaveN = self.e4.get()
+
+                    chavesPublica = str(chaveE + '_' + chaveN)
+                    print(chavesPublica)
                     print(chaveE)
                     print(chaveN)
 
                     self.content = Frame(master, bg="green").pack(side=TOP, pady= 200, padx= 10)
 
                     self.mensagem = Entry(self.content, width=68)
-                    self.mensagem.bind("<Return>", enviarMensagens)
-                    self.mensagem["text"] = ''
+                    self.mensagem.focus_set()
+                    self.mensagem.bind("<Return>", enviarMensagens)                     
+                    self.mensagem.focus_set()
                     self.mensagem.pack(side=LEFT,ipady=5)
 
                     
@@ -224,26 +243,17 @@ class Aplicacao ():
         for i in itensListB :
             self.listB.insert(END, i)
         # ********************************************************************************************************************************* 
-        horario = datetime.now()
-        horario = horario.strftime('%H:%M %Y %S')
+        def horarioAtual():
+            horario = datetime.now()
+            horario = horario.strftime('%H:%M %Y %S')
+            return horario
         # ********************************************************************************************************************************* 
         # *********************************************************************************************************************************  
-        '''self.listB.insert(0, 'Open : ' + horario)
-        self.listB.insert(END, '')
-        self.listB.insert(END, '>')'''
-
-
         
      
-
 root = Tk()
 root.geometry("550x550+250+100")
 root.configure(background="black")
 Aplicacao(root)
 root.mainloop()
-
-'''def criaWidgetsEnvio():
-            root.geometry("400x400+250+100")
-            self.frameMB.pack_forget()
-            self.frameExibeMensagem = Frame(master).pack(side=TOP)
-            self.frameEnviaMensagem = Frame(master).pack(side=BOTTOM)'''
+'
