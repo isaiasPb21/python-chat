@@ -1,0 +1,294 @@
+from threading import *   
+from datetime import *
+from tkinter import *
+from tkinter import messagebox  
+import socket
+import time
+
+
+
+class Aplicacao ():
+    def __init__(self, master=None):        
+        self.fontePadrao = ("Verdana", "13")
+        # ********************************************************************************************************************************* 
+        alfabeto = ['ª','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9',' ',',','.','+','-','*','/','\\','!','@','#','$','%','&','(',')']
+
+        # *********************************************************************************************************************************     
+        def ir():
+            pass
+        # *********************************************************************************************************************************        
+        # *********************************************************************************************************************************        
+      
+        # *********************************************************************************************************************************        
+        def recebeMensagem ():
+            
+            host = '192.168.15.12'
+            port = 2121
+            add = (host, port)
+
+            serv_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            serv_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+            serv_socket.bind(add)
+            serv_socket.listen(10)
+
+            
+            self.menu.add_cascade(label="Visible")
+            
+            while True:
+                con, cliente = serv_socket.accept()
+                recebe = con.recv(2024)
+                recebe = recebe.decode()
+                
+                def messageAppear():
+                    return  messagebox.askquestion("Message " + horarioAtual (),"Shows ?")
+                
+                if (messageAppear()) == 'no' :
+                    print('mensagem Negada')
+                    
+                else:
+                    self.frameExibeMensagem = Frame(master, bg="pink").pack(side=LEFT, fill=X, padx=50)
+
+                    lbExibeMensagem = Label(self.frameExibeMensagem, text=recebe).pack()
+                    
+                    
+                    
+                    print('Mostrar Mensa') #
+                    print(recebe)
+
+                # Chaves para decodificacao
+         
+                print('Mensagem Original : ', recebe)   #
+
+        # ********************************************************************************************************************************* 
+
+        # ********************************************************************************************************************************* 
+        def enviarMensagens(event):
+           
+           ip = '192.168.15.6'
+           port = 2121
+           add = (ip, port)
+           
+           clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+           clientSocket.connect(add)
+           
+           # Mensagem
+
+           x =  self.mensagem.get().lower()              
+           
+           clientSocket.sendto(x.encode(), (ip, port))
+           self.mensagem.delete(0, END)
+           clientSocket.close()
+
+        # ********************************************************************************************************************************* 
+
+
+
+        # ********************************************************************************************************************************* 
+        def curSelect(event):            
+            auxiliar=self.listB.curselection()
+            selection= auxiliar[0]
+            print(selection)
+            if (selection < 3):
+               pass
+            else :
+                picked = self.listB.get(selection)
+                print(picked)                                                                   #
+                print('indice : ', selection, 'patente : ', picked)           #         
+
+                tela_label_entry()        
+                self.frameM.pack_forget()
+
+        # ********************************************************************************************************************************* 
+    
+        def boxParaDigitar():
+            self.content = Frame(master, bg="green").pack(side=BOTTOM, pady= 200, padx= 10)
+            
+            self.l7 = Label(self.content, anchor=W, text=">> Digite a mensagem : ", bg="red")
+            self.l7.pack(fill=X, padx=10)
+            self.l8 = Label(self.content, text=">>", bg="black", fg="red")
+            self.l8.pack(side=LEFT, padx=10)
+            
+            self.mensagem = Entry(self.content, width=55, bg="black", fg="red", borderwidth=0, insertbackground="red")
+            self.mensagem.focus_set()
+            self.mensagem.bind("<Return>", enviarMensagens)    # Pressiona Enter e chama a função ENVIAR                 
+            self.mensagem.focus_set()
+            self.mensagem.pack(side=LEFT, padx=5)
+
+        # ********************************************************************************************************************************* 
+        # Passo - 1 -- envent '<Return>' -> função perguntaChave
+        def tela_label_entry():           
+            self.l1 = Label(self.frameMB, anchor=W, text='Open : ' + horarioAtual () + ' s', bg="red", fg="black").pack(fill=X)
+            self.l2 = Label(self.frameMB, anchor=W, text=" >> Ola, seja bem vindo Senhor", bg="black", fg="red").pack(fill=X)
+            self.l3 = Label(self.frameMB, text=" >> Deseja prosseguir ? [S / N]", bg="red", fg="black").pack(side=LEFT)
+
+            self.e = Entry(self.frameMB, width=2, bg="#000", fg="red", borderwidth=0, insertbackground="red")
+            self.e.bind("<Return>", perguntaChave)
+            self.e.focus_set()
+            self.e.pack(side=LEFT, padx=5)  
+
+        # ********************************************************************************************************************************* 
+        # Passo - 2 -- event '<Return>' -> função camposPreencherChave
+        def perguntaChave(event):
+            # --- --- --- --- --- --- --- --- --- 
+            # Passo - 3 -- event '<Return>' -> função passarPara_e4
+            def camposPreencherChave(event):
+           
+                self.x = ''
+                self.x = self.e2.get()
+                
+                if (self.x[0] == 'S') or (self.x[0] == 's'):
+                    self.l5 = Label(self.frameMBDK, anchor=W, fg="black", bg="red", text=">> Insira a chave pública : ")
+                    self.l5.pack(side=LEFT, fill=X)
+                
+                    self.e3 = Entry(self.frameMBDK, width=20, bg="black", fg="red", borderwidth=0, insertbackground="red")                    
+                    self.e3.bind("<Return>", passarPara_e4)
+                    self.e3.focus_set()
+                    self.e3.pack(side=LEFT, fill=X, padx=5)      
+                    
+                else:
+                    self.frameMBD.pack_forget()
+                    self.content = Frame(master, bg="yellow").pack(side=BOTTOM, pady= 200)
+            
+                    self.l7 = Label(self.content, anchor=W, text=">> Digite a mensagem : ", bg="red")
+                    self.l7.pack(fill=X, padx=10)
+                    self.l8 = Label(self.content, text=">>", bg="black", fg="red")
+                    self.l8.pack(side=LEFT, padx=10)
+                    
+                    self.mensagem = Entry(self.content, width=55, bg="black", fg="red", borderwidth=0, insertbackground="red")
+                    self.mensagem.focus_set()
+                    self.mensagem.bind("<Return>", enviarMensagens)    # Pressiona Enter e chama a função ENVIAR                 
+                    self.mensagem.focus_set()
+                    self.mensagem.pack(side=LEFT, padx=15)
+                    print('Err')
+                    
+                    #gerarChaves()
+                    
+                    #chaveE
+                    #chaveN
+                    #chaveD interna
+            
+          
+
+                    
+            # Passo - 4 -- event '<Return>' -> função chavesPublicas
+            def passarPara_e4(event):                                                                      # Event -- focus_set() -> e4 (Entry 04) 
+
+                # --- --- --- --- --- --- --- --- --- 
+                # Return Chaves Públicas 
+                def chavesPublicas(event):                                                                  # Setando chaves públicas
+
+                    # Limpando a tela
+                    #self.frameMB.pack_forget()
+                    self.frameMBD.pack_forget()
+                    self.frameMBDK.pack_forget()
+                    self.frameMBDKG.pack_forget()
+                    
+                    chaveE = self.e3.get()
+                    chaveN = self.e4.get()
+
+                    chavesPublica = str(chaveE + '_' + chaveN)
+                    print(chavesPublica)
+                    print('Chave E : ', chaveE, 'Chave N : ', chaveN)
+
+
+
+
+
+
+                    boxParaDigitar()
+                    # return                    
+                                       
+                self.l6 = Label(self.frameMBDKG, fg="black", bg="red", text=">> Insira a chave pública geral : ")
+                self.l6.pack(side=LEFT, fill=X)
+                
+                self.e4 = Entry(self.frameMBDKG, width=20, bg="black", fg="red", borderwidth=0, insertbackground="red")
+                self.e4.bind("<Return>", chavesPublicas)
+                self.e4.focus_set()
+                self.e4.pack(side=LEFT, padx=5)
+                # --- --- --- --- --- --- --- --- ---
+
+                
+            self.x = self.e.get()                                                                                         # Obtedo valor de [S/N] -- Frame 1
+            if (self.x[0] == 'S') or (self.x[0] == 's'):                                                         # Caso "Prosseguir" seja  [S]  
+
+                 funcao1 = Thread (target=recebeMensagem)                                    # Inicia o Thread 
+                 funcao1.start()
+                 
+                 print('Prosseguindo ... ')
+             
+                 self.frameMBD = Frame(master, bg="black", pady=12, padx=10) # Frame 2 -- Deseja inserir Chave
+                 self.frameMBD.pack(side=TOP, fill="both")
+
+                 self.frameMBDK = Frame(master, bg="black", pady=12, padx=10) # Frame 3 -- Chave Pública
+                 self.frameMBDK.pack(side=TOP, fill="both")
+
+                 self.frameMBDKG = Frame(master, bg="black", pady=12, padx=10) # Frame 4 -- Chave Pública Geral
+                 self.frameMBDKG.pack(side=TOP, fill="both")
+                                 
+                 self.l4 = Label(self.frameMBD, text=" >> Deseja inserir as chaves púlicas ? [S / N]", bg="red", fg="black").pack(side=LEFT)
+
+                 self.e2 = Entry(self.frameMBD, width=2, bg="#000", fg="red", borderwidth=0, insertbackground="red")
+                 self.e2.bind("<Return>", camposPreencherChave)
+                 self.e2.focus_set()
+                 self.e2.pack(side=LEFT, padx=5)        
+            
+            else:                                                                                                                     # Caso "Prosseguir"  não seja  [S]  
+                
+                 print(' Saindo ... ')
+                 master.destroy()
+           
+        # ********************************************************************************************************************************* 
+
+        # ********************************************************************************************************************************* 
+        
+        # ********************************************************************************************************************************* 
+        self.menu = Menu(master)                                                                                                                 #  
+
+        self.menuArquivos = Menu(self.menu)                                                                                              #                                                                                                
+        self.menuArquivos.add_command(label="Inserir Chave", command=ir)                                     
+        self.menuArquivos.add_command(label="Salvar")                                                                          
+        self.menuArquivos.add_separator()                                                                                                  
+        self.menuArquivos.add_command(label="Fechar")                                                                         
+        self.menu.add_cascade(label="Arquivos", menu=self.menuArquivos)                                      
+
+        self.menuConfiguracoes = Menu(self.menu)                                  
+        self.menuConfiguracoes.add_command(label="Criptografia    ")
+        self.menuConfiguracoes.add_command(label="Detalhes          ")
+        self.menu.add_cascade(label="Modus Operandi", menu=self.menuConfiguracoes)
+        
+        master.config(menu=self.menu)
+        # *********************************************************************************************************************************
+        self.frameM = Frame(master, bg="black", pady=12, padx=10)                                                                                                                          
+        self.frameM.pack(side=TOP, fill="both")
+        # *********************************************************************************************************************************
+        self.frameMB = Frame(master, bg="black", pady=12, padx=10)                                                                                                                            
+        self.frameMB.pack(side=TOP, fill="both")        
+        # *********************************************************************************************************************************                
+        self.listB = Listbox(self.frameM, borderwidth = 0, highlightthickness = 0, selectbackground="#f5f5f5", bg="#000", fg="red", width=40, height=15, selectmode=SINGLE)
+        self.listB.bind('<<ListboxSelect>>', curSelect)
+        self.listB.pack(side=LEFT)
+
+        itensListB = ['Almirante','Almitante de Esquadra', 'Vice-Almirante', 'Contra-Almirante', 'Capitão de Mar e Guerra', 'Capitão de Fragata', 'Capitão de Corveta', 'Capitão-Tenente', '1o Tenente', '2o Tenente', 'Guarda Marinha', 'Aspirante', 'Suboficial', '1o Sargento', '2o Sargento']
+
+        self.listB.insert(0, ' * Selecione sua patente : ')
+        self.listB.insert(1, ' _________________________')
+        self.listB.insert(2, '  ')
+        
+        for i in itensListB :
+            self.listB.insert(END, i)
+        # ********************************************************************************************************************************* 
+        def horarioAtual():
+            horario = datetime.now()
+            horario = horario.strftime('%H:%M %Y %S')
+            return horario
+        # ********************************************************************************************************************************* 
+        # *********************************************************************************************************************************  
+        
+     
+root = Tk()
+root.geometry("550x550+250+100")
+root.title("Gauss")
+root.configure(background="black")
+Aplicacao(root)
+root.mainloop()
