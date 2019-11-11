@@ -4,6 +4,7 @@ from tkinter import *
 from tkinter import messagebox  
 import socket
 import time
+import random
 
 
 
@@ -22,7 +23,7 @@ class Aplicacao ():
         # *********************************************************************************************************************************        
         def recebeMensagem ():
             
-            host = '192.168.15.12'
+            host = '192.168.15.5'
             port = 2121
             add = (host, port)
 
@@ -47,9 +48,9 @@ class Aplicacao ():
                     print('mensagem Negada')
                     
                 else:
-                    self.frameExibeMensagem = Frame(master, bg="pink").pack(side=LEFT, fill=X, padx=50)
+                    #self.frameExibeMensagem = Frame(master, bg="pink").pack(side=BOTTOM, fill=X, pady=50)
 
-                    lbExibeMensagem = Label(self.frameExibeMensagem, text=recebe).pack()
+                    #lbExibeMensagem = Label(self.frameExibeMensagem, text=recebe, fg="yellow").pack()
                     
                     
                     
@@ -64,8 +65,8 @@ class Aplicacao ():
 
         # ********************************************************************************************************************************* 
         def enviarMensagens(event):
-           
-           ip = '192.168.15.6'
+           print('Enviando')
+           ip = '192.168.15.4'
            port = 2121
            add = (ip, port)
            
@@ -162,13 +163,51 @@ class Aplicacao ():
                     self.mensagem.pack(side=LEFT, padx=15)
                     print('Err')
                     
-                    #gerarChaves()
+                    #gerarChaves() ----- [N]
                     
                     #chaveE
                     #chaveN
                     #chaveD interna
-            
-          
+
+                    def calcAlea (fim=1000):                 # Gerador de número aleatório
+                        aleatorio = random.randint(0,fim)
+                        return aleatorio
+
+                    def calcPrimo (num):                       #  Modelador do número aleatório
+                        acumulador = 0
+                        for n in range(1,num+1,1):
+                            aux = (num % n)
+                            if aux == 0:
+                                acumulador += 1
+                            if (aux ==0) and (n != 1) and (n !=num):
+                                return calcPrimo(num+1)
+                        if acumulador <= 2:
+                            return num
+
+
+                        
+                    numP = calcPrimo(calcAlea())     
+                    numQ = calcPrimo(calcAlea())
+
+                    feedN = ((numP-1) * (numQ-1))                   
+
+                    chaveE = calcPrimo(calcAlea(feedN-200))
+                    chaveN = (numP * numQ)
+
+                    chaves = (chaveE, chaveN)
+
+                    chaveD = 0
+                    x=0
+                    while x < chaveN:
+                        r = (x * chaveE) % feedN
+                        if r == 1:
+                            print(x)
+                            chaveD = x
+                            break
+                        x += 1
+
+                    print('Chaves : ', chaves)
+                    print('Chave D : ', chaveD)
 
                     
             # Passo - 4 -- event '<Return>' -> função chavesPublicas
@@ -292,3 +331,4 @@ root.title("Gauss")
 root.configure(background="black")
 Aplicacao(root)
 root.mainloop()
+
