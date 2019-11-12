@@ -10,7 +10,7 @@ class Aplicacao ():
     def __init__(self, master=None):        
         self.fontePadrao = ("Verdana", "13")
 
-        alfabeto = ['ª','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9',' ',',','.','+','-','*','/','\\','!','@','#','$','%','&','(',')']
+        alfabeto = ['ª','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','â','ã','é','ç','õ','0','1','2','3','4','5','6','7','8','9',' ',',','.','+','-','*','/','\\','!','@','#','$','%','&','(',')']
 
         # ********************************************************************************************************************** FUNÇÕES
         def horario():
@@ -103,18 +103,18 @@ class Aplicacao ():
                 print('Mensagem Original : ', mensagemOriginal)   #
 
 
-                '''if (bool(recebe) is True):                    
+                if (bool(recebe) is True):                    
                     self.yesOrNo = messagebox.askquestion("Message " + horario() ,"Shows ?")
                     if (self.yesOrNo == 'yes'):
-                        print('Mensagem Original : ', recebe)   #
-                        self.labelExibicao = Label(self.frameExibeMensagens, justify=LEFT, anchor=W, wraplength=370, text=recebe)
+                        print('Mensagem Original : ', mensagemOriginal)   #
+                        self.labelExibicao = Label(self.frameExibeMensagens, justify=LEFT, anchor=W, wraplength=370, text=mensagemOriginal)
                         self.labelExibicao.pack(ipady=5, padx=5, pady=5, fill="both")
                         time.sleep(10)
                         self.labelExibicao["text"] = "Apagando ..."
                         time.sleep(0.5)
                         self.labelExibicao.pack_forget()
                     else :
-                        print('Mensagem não irá ser recebida !!')'''
+                        print('Mensagem não irá ser recebida !!')
 
 
         # ************************************************ 
@@ -134,9 +134,9 @@ class Aplicacao ():
             outro_chaveN = int(self.ed3.get())
             
             # Mensagem
-            x = self.patente
-            x += ' : '
-            x +=  self.mensagem.get().lower()
+            x = self.patente.lower()
+            x += '-'
+            x += self.mensagem.get().lower()
             print(x)
 
             # Pré Cifragem   
@@ -150,7 +150,7 @@ class Aplicacao ():
 
             # Cifragem
             for i in preCodificadoEnvio:
-               aux4 = (i ** chaveE) % chaveN
+               aux4 = (i ** outro_chaveE) % outro_chaveN
                codificadoRsaEnvio.append(aux4)
 
             for i in codificadoRsaEnvio:
