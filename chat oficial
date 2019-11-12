@@ -225,15 +225,15 @@ class Aplicacao ():
         # ¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
         
         self.lb0 = Label(self.frameM, text = "Olá___", fg="#000", bg="#f00").pack(fill=X)
-        self.lb1 = Label(self.frameM, text = "Open : "+ horario() + ' s', fg="#f00", bg="black").pack(side=LEFT)
+        self.lb1 = Label(self.frameM, text = "Open : "+ horario() + ' s', fg="#f00", bg="black").pack(side=LEFT, pady=5)
 
         self.lb2 = Label(self.frameInput, text = "Chave pública do 2o [E] : ", anchor=W, fg="#000", bg="#f00").pack(fill=X)
-        self.ed2 = Entry(self.frameInput, borderwidth=0, insertbackground="#f00", bg="#000")
+        self.ed2 = Entry(self.frameInput, borderwidth=0, insertbackground="#f00", bg="#000", fg="#f00")
         self.ed2.focus_set()
         self.ed2.pack(fill=X)
         
         self.lb3 = Label(self.frameInput, text = "Chave pública Geral do 2o [N] :  ", anchor=W, fg="#000", bg="#f00").pack(fill=X)
-        self.ed3 = Entry(self.frameInput, borderwidth=0, insertbackground="#f00", bg="#000")
+        self.ed3 = Entry(self.frameInput, borderwidth=0, insertbackground="#f00", bg="#000", fg="#f00")
         self.ed3.pack(fill=X)
 
         self.bt_Avancar = Button(self.frameInput, text="Avancar", command=avancar, borderwidth=0, bg='#000', fg="#f00").pack(side=RIGHT, pady=5)
