@@ -79,11 +79,11 @@ class Aplicacao ():
                     self.yesOrNo = messagebox.askquestion("Message " + horario() ,"Shows ?")
                     if (self.yesOrNo == 'yes'):
                         print('Mensagem Original : ', recebe)   #
-                        self.labelExibicao = Label(self.frameExibeMensagens, justify=LEFT, anchor=W, wraplength=370, text=a)
+                        self.labelExibicao = Label(self.frameExibeMensagens, justify=LEFT, anchor=W, wraplength=370, text=recebe)
                         self.labelExibicao.pack(ipady=5, padx=5, pady=5, fill="both")
                         time.sleep(10)
                         self.labelExibicao["text"] = "Apagando ..."
-                        time.sleep(1)
+                        time.sleep(0.5)
                         self.labelExibicao.pack_forget()
                     else :
                         print('Mensagem não irá ser recebida !!')
@@ -103,6 +103,7 @@ class Aplicacao ():
            
             # Mensagem
             x = self.patente
+            x += ' : '
             x +=  self.mensagem.get().lower()
             print(x)
             print("Enviando ... ")
@@ -155,7 +156,7 @@ class Aplicacao ():
         # ¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
         
         self.lb0 = Label(self.frameM, text = "Olá___").pack()
-        self.lb1 = Label(self.frameM, text = "Open : "+ horario()).pack(side=LEFT)
+        self.lb1 = Label(self.frameM, text = "Open : "+ horario() + ' s').pack(side=LEFT)
 
         self.lb2 = Label(self.frameInput, text = "Chave pública do 2o [E] : ").pack()
         self.ed2 = Entry(self.frameInput)
