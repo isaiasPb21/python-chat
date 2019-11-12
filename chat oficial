@@ -108,9 +108,9 @@ class Aplicacao ():
                     if (self.yesOrNo == 'yes'):
                         print('Mensagem Original : ', mensagemOriginal)   #
                         
-                        self.labelExibicao = Label(self.frameExibeMensagens, justify=LEFT, anchor=W, wraplength=370, text=mensagemOriginal)
+                        self.labelExibicao = Label(self.frameExibeMensagens, justify=LEFT, anchor=W, wraplength=370, text=mensagemOriginal, fg="#f00", bg="black")
                         self.labelExibicao.pack(ipady=5, padx=5, pady=5, fill="both")
-                        self.labelHorario = Label(self.frameExibeMensagens,  anchor=E, text=horario())
+                        self.labelHorario = Label(self.frameExibeMensagens,  anchor=E, text=horario(), fg="#f00", bg="black")
                         self.labelHorario.pack(side=LEFT, padx=5, pady=2)                        
                         time.sleep(10)
                         
@@ -133,7 +133,7 @@ class Aplicacao ():
 
             print('Enviando')
                    
-            ip = '192.168.15.6'
+            ip = '192.168.15.4'
             port = 2121
             add = (ip, port)
            
@@ -200,17 +200,17 @@ class Aplicacao ():
             funcao1 = Thread (target=recebeMensagem)                                                # Inicia o Thread 
             funcao1.start()
 
-            self.frameExibeMensagens = Frame(master, bg="orange")
+            self.frameExibeMensagens = Frame(master, bg="#000")
             self.frameExibeMensagens.pack(fill="both")
             
-            self.frameShowKeys["bg"] = "pink"
+            self.frameShowKeys["bg"] = "#000"
             self.frameShowKeys.pack(side=BOTTOM)
             
-            self.mensagem = Entry(self.frameShowKeys, width=30)
+            self.mensagem = Entry(self.frameShowKeys, width=30, bg="#000", fg="#f00" ,borderwidth=0, insertbackground="#f00")
             self.mensagem.focus_set()
             self.mensagem.pack()
 
-            self.botaoEnviarMensagem = Button(self.frameShowKeys, text="Enviar", command=enviarMensagens)
+            self.botaoEnviarMensagem = Button(self.frameShowKeys, text="Enviar", command=enviarMensagens, borderwidth=0, bg='#000', fg="#f00")
             self.botaoEnviarMensagem.pack()                        
 
         # ******************************************************************************************************************** INTERFACE 
