@@ -10,7 +10,7 @@ class Aplicacao ():
     def __init__(self, master=None):        
         self.fontePadrao = ("Verdana", "13")
 
-        alfabeto = ['ª','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','â','ã','é','ç','õ','0','1','2','3','4','5','6','7','8','9',' ',',','.','+','-','*','/','\\','!','@','#','$','%','&','(',')']
+        alfabeto = ['ª','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','â','ã','é','ç','õ','0','1','2','3','4','5','6','7','8','9',' ',',','.','+','-','*',':','/','\\','!','@','#','$','%','&','(',')']
 
         # ********************************************************************************************************************** FUNÇÕES
         def horario():
@@ -57,7 +57,7 @@ class Aplicacao ():
        
         def recebeMensagem ():
             
-            host = '192.168.15.6'
+            host = '192.168.15.5'
             port = 2121
             add = (host, port)
 
@@ -72,50 +72,59 @@ class Aplicacao ():
                 recebe = con.recv(2024)
                 recebe = recebe.decode()
                 print('Mostrar Mensa') #
-                print(recebe)
-
+                print('Mensagem : ', recebe)
+                
                 recebe = recebe.split('_')
 
                 recebeInt = []
                 codificadoRsaRecebimento = []
                 preCodificadoRecebimento = []
-
+                
                 # -- Transformando a variavel recebe(c) em Inteiros
                 for i in  recebe:
                     aux0 = int(i)
-                    recebeInt.append(aux0)
-                    print(recebeInt)  #                        
+                    recebeInt.append(aux0)                                       
                   
                 # -- Decodificacao
                 for i in recebeInt:
                     aux1 = (i ** minha_chaveD) % minha_chaveN
                     codificadoRsaRecebimento.append(aux1)
-                    print(codificadoRsaRecebimento)  #
-                     
+
                 # -- des pré Codificação
                 for i in codificadoRsaRecebimento:
                     aux2 = alfabeto[i // 10]
                     preCodificadoRecebimento.append(aux2)
-                    print(preCodificadoRecebimento)   #
 
                 # -- Reajuntando a mensagem
-                mensagemOriginal = ' '.join(preCodificadoRecebimento)
-                print('Mensagem Original : ', mensagemOriginal)   #
-
+                mensagemOriginal = ''.join(preCodificadoRecebimento)
+                print('Mensagem Original : ', mensagemOriginal)
+                print('Mensagem Recebida')
+                
 
                 if (bool(recebe) is True):                    
                     self.yesOrNo = messagebox.askquestion("Message " + horario() ,"Shows ?")
                     if (self.yesOrNo == 'yes'):
                         print('Mensagem Original : ', mensagemOriginal)   #
+                        
                         self.labelExibicao = Label(self.frameExibeMensagens, justify=LEFT, anchor=W, wraplength=370, text=mensagemOriginal)
                         self.labelExibicao.pack(ipady=5, padx=5, pady=5, fill="both")
+                        self.labelHorario = Label(self.frameExibeMensagens,  anchor=E, text=horario())
+                        self.labelHorario.pack(side=LEFT)                        
                         time.sleep(10)
+                        
                         self.labelExibicao["text"] = "Apagando ..."
                         time.sleep(0.5)
+                        
                         self.labelExibicao.pack_forget()
+                        self.labelHorario.pack_forget()
                     else :
                         print('Mensagem não irá ser recebida !!')
-
+                        
+                print('Reset iniciando')
+                recebeInt = []
+                codificadoRsaRecebimento = []
+                preCodificadoRecebimento = []
+                mensagemOriginal = ''
 
         # ************************************************ 
         def enviarMensagens():
@@ -135,35 +144,38 @@ class Aplicacao ():
             
             # Mensagem
             x = self.patente.lower()
-            x += '-'
+            x += ' '+':'+' '
             x += self.mensagem.get().lower()
             print(x)
-
+            
             # Pré Cifragem   
             preCodificadoEnvio = []      
             codificadoRsaEnvio = []
             codificadoRsaStringEnvio = []
-   
+            
             for i in x:
-               aux3 = alfabeto.index(i) * 10
-               preCodificadoEnvio.append(aux3)
+                aux3 = alfabeto.index(i) * 10
+                preCodificadoEnvio.append(aux3)
 
             # Cifragem
             for i in preCodificadoEnvio:
-               aux4 = (i ** outro_chaveE) % outro_chaveN
-               codificadoRsaEnvio.append(aux4)
-
+                aux4 = (i ** outro_chaveE) % outro_chaveN
+                codificadoRsaEnvio.append(aux4)
             for i in codificadoRsaEnvio:
-               aux5 = str(i)
-               codificadoRsaStringEnvio.append(aux5)
+                aux5 = str(i)
+                codificadoRsaStringEnvio.append(aux5)
       
-            codificadoRsaEnvio = '_'.join(codificadoRsaStringEnvio)    
+            codificadoRsaEnvio = '_'.join(codificadoRsaStringEnvio)  
  
-            
             print("Enviando ... ")
             clientSocket.sendto(codificadoRsaEnvio.encode(), (ip, port))
             print("Enviado")
             self.mensagem.delete(0, END)
+
+            preCodificadoEnvio.clear()               
+            codificadoRsaStringEnvio.clear()
+            codificadoRsaEnvio = ''
+            
             clientSocket.close()
         # ************************************************        
         
@@ -205,7 +217,7 @@ class Aplicacao ():
         self.frameM.pack(fill="both")
         self.frameInput = Frame(master, bg="blue", pady=12, padx=10)                        # Frame Input                                                                                                     
         self.frameInput.pack(fill="both")
-        self.frameShowKeys = Frame(master, bg="yellow", pady=5, padx=10)                    # Frame ShowKeys                                                                                                             
+        self.frameShowKeys = Frame(master, bg="yellow", pady=5, padx=10)             # Frame ShowKeys                                                                                                             
         self.frameShowKeys.pack(fill="both")
         # ¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
         
