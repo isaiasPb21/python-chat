@@ -1,0 +1,203 @@
+from threading import *   
+from datetime import *
+from tkinter import *
+from tkinter import messagebox  
+import socket
+import time
+import random
+
+class Aplicacao ():
+    def __init__(self, master=None):        
+        self.fontePadrao = ("Verdana", "13")
+
+        alfabeto = ['ª','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9',' ',',','.','+','-','*','/','\\','!','@','#','$','%','&','(',')']
+
+        # ********************************************************************************************************************** FUNÇÕES
+        def horario():
+            horario = datetime.now()
+            horario = horario.strftime('%H:%M %Y %S')
+            return horario
+
+        # ************************************************
+        # ************************************************
+        def calcAlea (fim=1000):                 
+            aleatorio = random.randint(0,fim)
+            return aleatorio
+
+        def calcPrimo (num):                      
+            acumulador = 0
+            for n in range(1,num+1,1):
+                aux = (num % n)
+                if aux == 0:
+                    acumulador += 1
+                if (aux ==0) and (n != 1) and (n !=num):
+                    return calcPrimo(num+1)
+            if acumulador <= 2:
+                return num
+        
+        numP = calcPrimo(calcAlea())     
+        numQ = calcPrimo(calcAlea())
+
+        feedN = ((numP-1) * (numQ-1))                   
+
+        minha_chaveE = calcPrimo(calcAlea(feedN-200))
+        minha_chaveN = (numP * numQ)
+
+        chaves = (minha_chaveE, minha_chaveN)
+
+        minha_chaveD = 0
+        x=0
+        while x < minha_chaveN:
+            r = (x * minha_chaveE) % feedN
+            if r == 1:
+                minha_chaveD = x
+                break
+            x += 1
+        # ************************************************
+       
+        def recebeMensagem ():
+            
+            host = '192.168.15.6'
+            port = 2121
+            add = (host, port)
+
+            serv_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            serv_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+            serv_socket.bind(add)
+            serv_socket.listen(10)
+            
+            while True:
+                con, cliente = serv_socket.accept()
+                recebe = con.recv(2024)
+                recebe = recebe.decode()
+                print('Mostrar Mensa') #
+                print(recebe)
+
+                if (bool(recebe) is True):
+                    a = 'a' * 128
+                    self.yesOrNo = messagebox.askquestion("Message " + horario() ,"Shows ?")
+                    if (self.yesOrNo == 'yes'):
+                        print('Mensagem Original : ', recebe)   #
+                        self.labelExibicao = Label(self.frameExibeMensagens, justify=LEFT, anchor=W, wraplength=370, text=a)
+                        self.labelExibicao.pack(ipady=5, padx=5, pady=5, fill="both")
+                        time.sleep(10)
+                        self.labelExibicao["text"] = "Apagando ..."
+                        time.sleep(1)
+                        self.labelExibicao.pack_forget()
+                    else :
+                        print('Mensagem não irá ser recebida !!')
+
+
+        # ************************************************ 
+        def enviarMensagens():
+
+            print('Enviando')
+                   
+            ip = '192.168.15.2'
+            port = 2121
+            add = (ip, port)
+           
+            clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            clientSocket.connect(add)
+           
+            # Mensagem
+            x = self.patente
+            x +=  self.mensagem.get().lower()
+            print(x)
+            print("Enviando ... ")
+            clientSocket.sendto(x.encode(), (ip, port))
+            print("Enviado")
+            self.mensagem.delete(0, END)
+            clientSocket.close()
+        # ************************************************        
+        
+        def avancar():
+            outro_chaveE = self.ed2.get()
+            outro_chaveN = self.ed3.get()
+            
+            aux = self.listB.curselection()
+            aux = aux[0]
+            if (aux < 8):
+                print('menor')
+            else:
+                self.patente = self.listB.get(aux)
+                print(self.patente)
+            print('-')
+
+            self.frameInput.pack_forget()
+            self.listB.pack_forget()
+
+            funcao1 = Thread (target=recebeMensagem)                                    # Inicia o Thread 
+            funcao1.start()
+
+            self.frameExibeMensagens = Frame(master, bg="orange")
+            self.frameExibeMensagens.pack(fill="both")
+            
+            self.frameShowKeys["bg"] = "pink"
+            self.frameShowKeys.pack(side=BOTTOM)
+            
+            self.mensagem = Entry(self.frameShowKeys, width=30)
+            self.mensagem.pack()
+
+            self.botaoEnviarMensagem = Button(self.frameShowKeys, text="Enviar", command=enviarMensagens)
+            self.botaoEnviarMensagem.pack()                        
+
+        # ******************************************************************************************************************** INTERFACE 
+      
+
+        self.frameM = Frame(master, bg="yellow", pady=12, padx=10)                          # Frame M                                                                                                              
+        self.frameM.pack(fill="both")
+        self.frameInput = Frame(master, bg="blue", pady=12, padx=10)                        # Frame Input                                                                                                     
+        self.frameInput.pack(fill="both")
+        self.frameShowKeys = Frame(master, bg="yellow", pady=5, padx=10)                    # Frame ShowKeys                                                                                                             
+        self.frameShowKeys.pack(fill="both")
+        # ¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
+        
+        self.lb0 = Label(self.frameM, text = "Olá___").pack()
+        self.lb1 = Label(self.frameM, text = "Open : "+ horario()).pack(side=LEFT)
+
+        self.lb2 = Label(self.frameInput, text = "Chave pública do 2o [E] : ").pack()
+        self.ed2 = Entry(self.frameInput)
+        self.ed2.pack()
+        
+        self.lb3 = Label(self.frameInput, text = "Chave pública Geral do 2o [N] :  ").pack()
+        self.ed3 = Entry(self.frameInput)
+        self.ed3.pack()
+
+        self.bt_Avancar = Button(self.frameInput, text="Avancar", command=avancar).pack()
+        # ¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
+
+        self.listB = Listbox(self.frameShowKeys, borderwidth = 0, highlightthickness = 0, selectbackground="#f5f5f5", bg="pink", fg="red", width=60, height=25, selectmode=SINGLE)
+        self.listB.pack()
+
+        itensListB = ['Almirante','Almitante de Esquadra', 'Vice-Almirante', 'Contra-Almirante', 'Capitão de Mar e Guerra', 'Capitão de Fragata', 'Capitão de Corveta',
+              'Capitão-Tenente', '1o Tenente', '2o Tenente', 'Guarda Marinha', 'Aspirante', 'Suboficial', '1o Sargento', '2o Sargento']
+
+        self.listB.insert(END, 'SUAS CHAVES : ')
+        self.listB.insert(END, '________________')
+        self.listB.insert(END, '')
+        self.listB.insert(END, 'Chave [E] : ' + str(minha_chaveE))
+        self.listB.insert(END, '')
+        self.listB.insert(END, 'Chave [N] : ' + str(minha_chaveN))
+        self.listB.insert(END, '')
+
+        self.listB.insert(END, 'Selecione sua patente : ')
+        
+        for i in itensListB :
+            self.listB.insert(END, i)
+            
+        print(minha_chaveE)
+        print(minha_chaveN)
+        print(minha_chaveD)
+        # ¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
+
+
+        
+
+
+root = Tk()
+root.geometry("550x575+250+100")
+root.configure(background="black")
+Aplicacao(root)
+root.mainloop()               
