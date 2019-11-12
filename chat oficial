@@ -53,6 +53,8 @@ class Aplicacao ():
                 minha_chaveD = x
                 break
             x += 1
+
+        print('P {} * Q {} * N {} * D {} * E {}'.format(numP, numQ, minha_chaveN, minha_chaveD, minha_chaveE))
         # ************************************************
        
         def recebeMensagem ():
@@ -109,7 +111,7 @@ class Aplicacao ():
                         self.labelExibicao = Label(self.frameExibeMensagens, justify=LEFT, anchor=W, wraplength=370, text=mensagemOriginal)
                         self.labelExibicao.pack(ipady=5, padx=5, pady=5, fill="both")
                         self.labelHorario = Label(self.frameExibeMensagens,  anchor=E, text=horario())
-                        self.labelHorario.pack(side=LEFT)                        
+                        self.labelHorario.pack(side=LEFT, padx=5, pady=2)                        
                         time.sleep(10)
                         
                         self.labelExibicao["text"] = "Apagando ..."
@@ -131,7 +133,7 @@ class Aplicacao ():
 
             print('Enviando')
                    
-            ip = '192.168.15.2'
+            ip = '192.168.15.6'
             port = 2121
             add = (ip, port)
            
@@ -185,7 +187,7 @@ class Aplicacao ():
             
             aux = self.listB.curselection()
             aux = aux[0]
-            if (aux < 8):
+            if (aux < 7):
                 print('menor')
             else:
                 self.patente = self.listB.get(aux)
@@ -195,7 +197,7 @@ class Aplicacao ():
             self.frameInput.pack_forget()
             self.listB.pack_forget()
 
-            funcao1 = Thread (target=recebeMensagem)                                    # Inicia o Thread 
+            funcao1 = Thread (target=recebeMensagem)                                                # Inicia o Thread 
             funcao1.start()
 
             self.frameExibeMensagens = Frame(master, bg="orange")
@@ -224,25 +226,24 @@ class Aplicacao ():
         self.lb0 = Label(self.frameM, text = "Olá___").pack()
         self.lb1 = Label(self.frameM, text = "Open : "+ horario() + ' s').pack(side=LEFT)
 
-        self.lb2 = Label(self.frameInput, text = "Chave pública do 2o [E] : ").pack()
+        self.lb2 = Label(self.frameInput, text = "Chave pública do 2o [E] : ", anchor=W).pack(fill=X)
         self.ed2 = Entry(self.frameInput)
-        self.ed2.pack()
+        self.ed2.pack(fill=X)
         
-        self.lb3 = Label(self.frameInput, text = "Chave pública Geral do 2o [N] :  ").pack()
+        self.lb3 = Label(self.frameInput, text = "Chave pública Geral do 2o [N] :  ", anchor=W).pack(fill=X)
         self.ed3 = Entry(self.frameInput)
-        self.ed3.pack()
+        self.ed3.pack(fill=X)
 
-        self.bt_Avancar = Button(self.frameInput, text="Avancar", command=avancar).pack()
+        self.bt_Avancar = Button(self.frameInput, text="Avancar", command=avancar).pack(side=RIGHT)
         # ¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
 
         self.listB = Listbox(self.frameShowKeys, borderwidth = 0, highlightthickness = 0, selectbackground="#f5f5f5", bg="pink", fg="red", width=60, height=25, selectmode=SINGLE)
-        self.listB.pack()
+        self.listB.pack(side=LEFT)
 
         itensListB = ['Almirante','Almitante de Esquadra', 'Vice-Almirante', 'Contra-Almirante', 'Capitão de Mar e Guerra', 'Capitão de Fragata', 'Capitão de Corveta',
               'Capitão-Tenente', '1o Tenente', '2o Tenente', 'Guarda Marinha', 'Aspirante', 'Suboficial', '1o Sargento', '2o Sargento']
 
-        self.listB.insert(END, 'SUAS CHAVES : ')
-        self.listB.insert(END, '________________')
+        self.listB.insert(END, 'SUAS CHAVES : ')        
         self.listB.insert(END, '')
         self.listB.insert(END, 'Chave [E] : ' + str(minha_chaveE))
         self.listB.insert(END, '')
@@ -264,7 +265,7 @@ class Aplicacao ():
 
 
 root = Tk()
-root.geometry("550x575+250+100")
+root.geometry("550x620+250+80")
 root.configure(background="black")
 Aplicacao(root)
 root.mainloop()               
