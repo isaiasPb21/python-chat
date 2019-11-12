@@ -207,6 +207,7 @@ class Aplicacao ():
             self.frameShowKeys.pack(side=BOTTOM)
             
             self.mensagem = Entry(self.frameShowKeys, width=30)
+            self.mensagem.focus_set()
             self.mensagem.pack()
 
             self.botaoEnviarMensagem = Button(self.frameShowKeys, text="Enviar", command=enviarMensagens)
@@ -215,29 +216,30 @@ class Aplicacao ():
         # ******************************************************************************************************************** INTERFACE 
       
 
-        self.frameM = Frame(master, bg="yellow", pady=12, padx=10)                          # Frame M                                                                                                              
+        self.frameM = Frame(master, bg="#000", pady=12, padx=10)                          # Frame M                                                                                                              
         self.frameM.pack(fill="both")
-        self.frameInput = Frame(master, bg="blue", pady=12, padx=10)                        # Frame Input                                                                                                     
+        self.frameInput = Frame(master, bg="#000", pady=12, padx=10)                        # Frame Input                                                                                                     
         self.frameInput.pack(fill="both")
-        self.frameShowKeys = Frame(master, bg="yellow", pady=5, padx=10)             # Frame ShowKeys                                                                                                             
+        self.frameShowKeys = Frame(master, bg="#f00", pady=5, padx=10)             # Frame ShowKeys                                                                                                             
         self.frameShowKeys.pack(fill="both")
         # ¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
         
-        self.lb0 = Label(self.frameM, text = "Olá___").pack()
-        self.lb1 = Label(self.frameM, text = "Open : "+ horario() + ' s').pack(side=LEFT)
+        self.lb0 = Label(self.frameM, text = "Olá___", fg="#000", bg="#f00").pack(fill=X)
+        self.lb1 = Label(self.frameM, text = "Open : "+ horario() + ' s', fg="#f00", bg="black").pack(side=LEFT)
 
-        self.lb2 = Label(self.frameInput, text = "Chave pública do 2o [E] : ", anchor=W).pack(fill=X)
-        self.ed2 = Entry(self.frameInput)
+        self.lb2 = Label(self.frameInput, text = "Chave pública do 2o [E] : ", anchor=W, fg="#000", bg="#f00").pack(fill=X)
+        self.ed2 = Entry(self.frameInput, borderwidth=0, insertbackground="#f00", bg="#000")
+        self.ed2.focus_set()
         self.ed2.pack(fill=X)
         
-        self.lb3 = Label(self.frameInput, text = "Chave pública Geral do 2o [N] :  ", anchor=W).pack(fill=X)
-        self.ed3 = Entry(self.frameInput)
+        self.lb3 = Label(self.frameInput, text = "Chave pública Geral do 2o [N] :  ", anchor=W, fg="#000", bg="#f00").pack(fill=X)
+        self.ed3 = Entry(self.frameInput, borderwidth=0, insertbackground="#f00", bg="#000")
         self.ed3.pack(fill=X)
 
-        self.bt_Avancar = Button(self.frameInput, text="Avancar", command=avancar).pack(side=RIGHT)
+        self.bt_Avancar = Button(self.frameInput, text="Avancar", command=avancar, borderwidth=0, bg='#000', fg="#f00").pack(side=RIGHT, pady=5)
         # ¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
 
-        self.listB = Listbox(self.frameShowKeys, borderwidth = 0, highlightthickness = 0, selectbackground="#f5f5f5", bg="pink", fg="red", width=60, height=25, selectmode=SINGLE)
+        self.listB = Listbox(self.frameShowKeys, borderwidth = 0, highlightthickness = 0, selectbackground="#f5f5f5", bg="#000", fg="#f00", width=70, height=25, selectmode=SINGLE)
         self.listB.pack(side=LEFT)
 
         itensListB = ['Almirante','Almitante de Esquadra', 'Vice-Almirante', 'Contra-Almirante', 'Capitão de Mar e Guerra', 'Capitão de Fragata', 'Capitão de Corveta',
