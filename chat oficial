@@ -6,24 +6,58 @@ import socket
 import time
 import random
 
-
-
 class Aplicacao ():
     def __init__(self, master=None):        
         self.fontePadrao = ("Verdana", "13")
-        # ********************************************************************************************************************************* 
+
         alfabeto = ['ª','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9',' ',',','.','+','-','*','/','\\','!','@','#','$','%','&','(',')']
 
-        # *********************************************************************************************************************************     
-        def ir():
-            pass
-        # *********************************************************************************************************************************        
-        # *********************************************************************************************************************************        
-      
-        # *********************************************************************************************************************************        
+        # ********************************************************************************************************************** FUNÇÕES
+        def horario():
+            horario = datetime.now()
+            horario = horario.strftime('%H:%M %Y %S')
+            return horario
+
+        # ************************************************
+        # ************************************************
+        def calcAlea (fim=1000):                 
+            aleatorio = random.randint(0,fim)
+            return aleatorio
+
+        def calcPrimo (num):                      
+            acumulador = 0
+            for n in range(1,num+1,1):
+                aux = (num % n)
+                if aux == 0:
+                    acumulador += 1
+                if (aux ==0) and (n != 1) and (n !=num):
+                    return calcPrimo(num+1)
+            if acumulador <= 2:
+                return num
+        
+        numP = calcPrimo(calcAlea())     
+        numQ = calcPrimo(calcAlea())
+
+        feedN = ((numP-1) * (numQ-1))                   
+
+        minha_chaveE = calcPrimo(calcAlea(feedN-200))
+        minha_chaveN = (numP * numQ)
+
+        chaves = (minha_chaveE, minha_chaveN)
+
+        minha_chaveD = 0
+        x=0
+        while x < minha_chaveN:
+            r = (x * minha_chaveE) % feedN
+            if r == 1:
+                minha_chaveD = x
+                break
+            x += 1
+        # ************************************************
+       
         def recebeMensagem ():
             
-            host = '192.168.15.5'
+            host = '192.168.15.6'
             port = 2121
             add = (host, port)
 
@@ -32,303 +66,193 @@ class Aplicacao ():
 
             serv_socket.bind(add)
             serv_socket.listen(10)
-
-            
-            self.menu.add_cascade(label="Visible")
             
             while True:
                 con, cliente = serv_socket.accept()
                 recebe = con.recv(2024)
                 recebe = recebe.decode()
-                
-                def messageAppear():
-                    return  messagebox.askquestion("Message " + horarioAtual (),"Shows ?")
-                
-                if (messageAppear()) == 'no' :
-                    print('mensagem Negada')
-                    
-                else:
-                    #self.frameExibeMensagem = Frame(master, bg="pink").pack(side=BOTTOM, fill=X, pady=50)
+                print('Mostrar Mensa') #
+                print(recebe)
 
-                    #lbExibeMensagem = Label(self.frameExibeMensagem, text=recebe, fg="yellow").pack()
-                    
-                    
-                    
-                    print('Mostrar Mensa') #
-                    print(recebe)
+                recebe = recebe.split('_')
 
-                # Chaves para decodificacao
-         
-                print('Mensagem Original : ', recebe)   #
+                recebeInt = []
+                codificadoRsaRecebimento = []
+                preCodificadoRecebimento = []
 
-        # ********************************************************************************************************************************* 
+                # -- Transformando a variavel recebe(c) em Inteiros
+                for i in  recebe:
+                    aux0 = int(i)
+                    recebeInt.append(aux0)
+                    print(recebeInt)  #                        
+                  
+                # -- Decodificacao
+                for i in recebeInt:
+                    aux1 = (i ** minha_chaveD) % minha_chaveN
+                    codificadoRsaRecebimento.append(aux1)
+                    print(codificadoRsaRecebimento)  #
+                     
+                # -- des pré Codificação
+                for i in codificadoRsaRecebimento:
+                    aux2 = alfabeto[i // 10]
+                    preCodificadoRecebimento.append(aux2)
+                    print(preCodificadoRecebimento)   #
 
-        # ********************************************************************************************************************************* 
-        def enviarMensagens(event):
-           print('Enviando')
-           ip = '192.168.15.4'
-           port = 2121
-           add = (ip, port)
+                # -- Reajuntando a mensagem
+                mensagemOriginal = ' '.join(preCodificadoRecebimento)
+                print('Mensagem Original : ', mensagemOriginal)   #
+
+
+                '''if (bool(recebe) is True):                    
+                    self.yesOrNo = messagebox.askquestion("Message " + horario() ,"Shows ?")
+                    if (self.yesOrNo == 'yes'):
+                        print('Mensagem Original : ', recebe)   #
+                        self.labelExibicao = Label(self.frameExibeMensagens, justify=LEFT, anchor=W, wraplength=370, text=recebe)
+                        self.labelExibicao.pack(ipady=5, padx=5, pady=5, fill="both")
+                        time.sleep(10)
+                        self.labelExibicao["text"] = "Apagando ..."
+                        time.sleep(0.5)
+                        self.labelExibicao.pack_forget()
+                    else :
+                        print('Mensagem não irá ser recebida !!')'''
+
+
+        # ************************************************ 
+        def enviarMensagens():
+
+            print('Enviando')
+                   
+            ip = '192.168.15.2'
+            port = 2121
+            add = (ip, port)
            
-           clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-           clientSocket.connect(add)
-           
-           # Mensagem
+            clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            clientSocket.connect(add)
 
-           x =  self.mensagem.get().lower()              
-           
-           clientSocket.sendto(x.encode(), (ip, port))
-           self.mensagem.delete(0, END)
-           clientSocket.close()
-
-        # ********************************************************************************************************************************* 
-
-
-
-        # ********************************************************************************************************************************* 
-        def curSelect(event):            
-            auxiliar=self.listB.curselection()
-            selection= auxiliar[0]
-            print(selection)
-            if (selection < 3):
-               pass
-            else :
-                picked = self.listB.get(selection)
-                print(picked)                                                                   #
-                print('indice : ', selection, 'patente : ', picked)           #         
-
-                tela_label_entry()        
-                self.frameM.pack_forget()
-
-        # ********************************************************************************************************************************* 
-    
-        def boxParaDigitar():
-            self.content = Frame(master, bg="green").pack(side=BOTTOM, pady= 200, padx= 10)
+            # Chaves
+            outro_chaveE = int(self.ed2.get())
+            outro_chaveN = int(self.ed3.get())
             
-            self.l7 = Label(self.content, anchor=W, text=">> Digite a mensagem : ", bg="red")
-            self.l7.pack(fill=X, padx=10)
-            self.l8 = Label(self.content, text=">>", bg="black", fg="red")
-            self.l8.pack(side=LEFT, padx=10)
+            # Mensagem
+            x = self.patente
+            x += ' : '
+            x +=  self.mensagem.get().lower()
+            print(x)
+
+            # Pré Cifragem   
+            preCodificadoEnvio = []      
+            codificadoRsaEnvio = []
+            codificadoRsaStringEnvio = []
+   
+            for i in x:
+               aux3 = alfabeto.index(i) * 10
+               preCodificadoEnvio.append(aux3)
+
+            # Cifragem
+            for i in preCodificadoEnvio:
+               aux4 = (i ** chaveE) % chaveN
+               codificadoRsaEnvio.append(aux4)
+
+            for i in codificadoRsaEnvio:
+               aux5 = str(i)
+               codificadoRsaStringEnvio.append(aux5)
+      
+            codificadoRsaEnvio = '_'.join(codificadoRsaStringEnvio)    
+ 
             
-            self.mensagem = Entry(self.content, width=55, bg="black", fg="red", borderwidth=0, insertbackground="red")
-            self.mensagem.focus_set()
-            self.mensagem.bind("<Return>", enviarMensagens)    # Pressiona Enter e chama a função ENVIAR                 
-            self.mensagem.focus_set()
-            self.mensagem.pack(side=LEFT, padx=5)
-
-        # ********************************************************************************************************************************* 
-        # Passo - 1 -- envent '<Return>' -> função perguntaChave
-        def tela_label_entry():           
-            self.l1 = Label(self.frameMB, anchor=W, text='Open : ' + horarioAtual () + ' s', bg="red", fg="black").pack(fill=X)
-            self.l2 = Label(self.frameMB, anchor=W, text=" >> Ola, seja bem vindo Senhor", bg="black", fg="red").pack(fill=X)
-            self.l3 = Label(self.frameMB, text=" >> Deseja prosseguir ? [S / N]", bg="red", fg="black").pack(side=LEFT)
-
-            self.e = Entry(self.frameMB, width=2, bg="#000", fg="red", borderwidth=0, insertbackground="red")
-            self.e.bind("<Return>", perguntaChave)
-            self.e.focus_set()
-            self.e.pack(side=LEFT, padx=5)  
-
-        # ********************************************************************************************************************************* 
-        # Passo - 2 -- event '<Return>' -> função camposPreencherChave
-        def perguntaChave(event):
-            # --- --- --- --- --- --- --- --- --- 
-            # Passo - 3 -- event '<Return>' -> função passarPara_e4
-            def camposPreencherChave(event):
-           
-                self.x = ''
-                self.x = self.e2.get()
-                
-                if (self.x[0] == 'S') or (self.x[0] == 's'):
-                    self.l5 = Label(self.frameMBDK, anchor=W, fg="black", bg="red", text=">> Insira a chave pública : ")
-                    self.l5.pack(side=LEFT, fill=X)
-                
-                    self.e3 = Entry(self.frameMBDK, width=20, bg="black", fg="red", borderwidth=0, insertbackground="red")                    
-                    self.e3.bind("<Return>", passarPara_e4)
-                    self.e3.focus_set()
-                    self.e3.pack(side=LEFT, fill=X, padx=5)      
-                    
-                else:
-                    self.frameMBD.pack_forget()
-                    self.content = Frame(master, bg="yellow").pack(side=BOTTOM, pady= 200)
-            
-                    self.l7 = Label(self.content, anchor=W, text=">> Digite a mensagem : ", bg="red")
-                    self.l7.pack(fill=X, padx=10)
-                    self.l8 = Label(self.content, text=">>", bg="black", fg="red")
-                    self.l8.pack(side=LEFT, padx=10)
-                    
-                    self.mensagem = Entry(self.content, width=55, bg="black", fg="red", borderwidth=0, insertbackground="red")
-                    self.mensagem.focus_set()
-                    self.mensagem.bind("<Return>", enviarMensagens)    # Pressiona Enter e chama a função ENVIAR                 
-                    self.mensagem.focus_set()
-                    self.mensagem.pack(side=LEFT, padx=15)
-                    print('Err')
-                    
-                    #gerarChaves() ----- [N]
-                    
-                    #chaveE
-                    #chaveN
-                    #chaveD interna
-
-                    def calcAlea (fim=1000):                 # Gerador de número aleatório
-                        aleatorio = random.randint(0,fim)
-                        return aleatorio
-
-                    def calcPrimo (num):                       #  Modelador do número aleatório
-                        acumulador = 0
-                        for n in range(1,num+1,1):
-                            aux = (num % n)
-                            if aux == 0:
-                                acumulador += 1
-                            if (aux ==0) and (n != 1) and (n !=num):
-                                return calcPrimo(num+1)
-                        if acumulador <= 2:
-                            return num
-
-
-                        
-                    numP = calcPrimo(calcAlea())     
-                    numQ = calcPrimo(calcAlea())
-
-                    feedN = ((numP-1) * (numQ-1))                   
-
-                    chaveE = calcPrimo(calcAlea(feedN-200))
-                    chaveN = (numP * numQ)
-
-                    chaves = (chaveE, chaveN)
-
-                    chaveD = 0
-                    x=0
-                    while x < chaveN:
-                        r = (x * chaveE) % feedN
-                        if r == 1:
-                            print(x)
-                            chaveD = x
-                            break
-                        x += 1
-
-                    print('Chaves : ', chaves)
-                    print('Chave D : ', chaveD)
-
-                    
-            # Passo - 4 -- event '<Return>' -> função chavesPublicas
-            def passarPara_e4(event):                                                                      # Event -- focus_set() -> e4 (Entry 04) 
-
-                # --- --- --- --- --- --- --- --- --- 
-                # Return Chaves Públicas 
-                def chavesPublicas(event):                                                                  # Setando chaves públicas
-
-                    # Limpando a tela
-                    #self.frameMB.pack_forget()
-                    self.frameMBD.pack_forget()
-                    self.frameMBDK.pack_forget()
-                    self.frameMBDKG.pack_forget()
-                    
-                    chaveE = self.e3.get()
-                    chaveN = self.e4.get()
-
-                    chavesPublica = str(chaveE + '_' + chaveN)
-                    print(chavesPublica)
-                    print('Chave E : ', chaveE, 'Chave N : ', chaveN)
-
-
-
-
-
-
-                    boxParaDigitar()
-                    # return                    
-                                       
-                self.l6 = Label(self.frameMBDKG, fg="black", bg="red", text=">> Insira a chave pública geral : ")
-                self.l6.pack(side=LEFT, fill=X)
-                
-                self.e4 = Entry(self.frameMBDKG, width=20, bg="black", fg="red", borderwidth=0, insertbackground="red")
-                self.e4.bind("<Return>", chavesPublicas)
-                self.e4.focus_set()
-                self.e4.pack(side=LEFT, padx=5)
-                # --- --- --- --- --- --- --- --- ---
-
-                
-            self.x = self.e.get()                                                                                         # Obtedo valor de [S/N] -- Frame 1
-            if (self.x[0] == 'S') or (self.x[0] == 's'):                                                         # Caso "Prosseguir" seja  [S]  
-
-                 funcao1 = Thread (target=recebeMensagem)                                    # Inicia o Thread 
-                 funcao1.start()
-                 
-                 print('Prosseguindo ... ')
-             
-                 self.frameMBD = Frame(master, bg="black", pady=12, padx=10) # Frame 2 -- Deseja inserir Chave
-                 self.frameMBD.pack(side=TOP, fill="both")
-
-                 self.frameMBDK = Frame(master, bg="black", pady=12, padx=10) # Frame 3 -- Chave Pública
-                 self.frameMBDK.pack(side=TOP, fill="both")
-
-                 self.frameMBDKG = Frame(master, bg="black", pady=12, padx=10) # Frame 4 -- Chave Pública Geral
-                 self.frameMBDKG.pack(side=TOP, fill="both")
-                                 
-                 self.l4 = Label(self.frameMBD, text=" >> Deseja inserir as chaves púlicas ? [S / N]", bg="red", fg="black").pack(side=LEFT)
-
-                 self.e2 = Entry(self.frameMBD, width=2, bg="#000", fg="red", borderwidth=0, insertbackground="red")
-                 self.e2.bind("<Return>", camposPreencherChave)
-                 self.e2.focus_set()
-                 self.e2.pack(side=LEFT, padx=5)        
-            
-            else:                                                                                                                     # Caso "Prosseguir"  não seja  [S]  
-                
-                 print(' Saindo ... ')
-                 master.destroy()
-           
-        # ********************************************************************************************************************************* 
-
-        # ********************************************************************************************************************************* 
+            print("Enviando ... ")
+            clientSocket.sendto(codificadoRsaEnvio.encode(), (ip, port))
+            print("Enviado")
+            self.mensagem.delete(0, END)
+            clientSocket.close()
+        # ************************************************        
         
-        # ********************************************************************************************************************************* 
-        self.menu = Menu(master)                                                                                                                 #  
+        def avancar():
+            outro_chaveE = self.ed2.get()
+            outro_chaveN = self.ed3.get()
+            
+            aux = self.listB.curselection()
+            aux = aux[0]
+            if (aux < 8):
+                print('menor')
+            else:
+                self.patente = self.listB.get(aux)
+                print(self.patente)
+            print('-')
 
-        self.menuArquivos = Menu(self.menu)                                                                                              #                                                                                                
-        self.menuArquivos.add_command(label="Inserir Chave", command=ir)                                     
-        self.menuArquivos.add_command(label="Salvar")                                                                          
-        self.menuArquivos.add_separator()                                                                                                  
-        self.menuArquivos.add_command(label="Fechar")                                                                         
-        self.menu.add_cascade(label="Arquivos", menu=self.menuArquivos)                                      
+            self.frameInput.pack_forget()
+            self.listB.pack_forget()
 
-        self.menuConfiguracoes = Menu(self.menu)                                  
-        self.menuConfiguracoes.add_command(label="Criptografia    ")
-        self.menuConfiguracoes.add_command(label="Detalhes          ")
-        self.menu.add_cascade(label="Modus Operandi", menu=self.menuConfiguracoes)
+            funcao1 = Thread (target=recebeMensagem)                                    # Inicia o Thread 
+            funcao1.start()
+
+            self.frameExibeMensagens = Frame(master, bg="orange")
+            self.frameExibeMensagens.pack(fill="both")
+            
+            self.frameShowKeys["bg"] = "pink"
+            self.frameShowKeys.pack(side=BOTTOM)
+            
+            self.mensagem = Entry(self.frameShowKeys, width=30)
+            self.mensagem.pack()
+
+            self.botaoEnviarMensagem = Button(self.frameShowKeys, text="Enviar", command=enviarMensagens)
+            self.botaoEnviarMensagem.pack()                        
+
+        # ******************************************************************************************************************** INTERFACE 
+      
+
+        self.frameM = Frame(master, bg="yellow", pady=12, padx=10)                          # Frame M                                                                                                              
+        self.frameM.pack(fill="both")
+        self.frameInput = Frame(master, bg="blue", pady=12, padx=10)                        # Frame Input                                                                                                     
+        self.frameInput.pack(fill="both")
+        self.frameShowKeys = Frame(master, bg="yellow", pady=5, padx=10)                    # Frame ShowKeys                                                                                                             
+        self.frameShowKeys.pack(fill="both")
+        # ¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
         
-        master.config(menu=self.menu)
-        # *********************************************************************************************************************************
-        self.frameM = Frame(master, bg="black", pady=12, padx=10)                                                                                                                          
-        self.frameM.pack(side=TOP, fill="both")
-        # *********************************************************************************************************************************
-        self.frameMB = Frame(master, bg="black", pady=12, padx=10)                                                                                                                            
-        self.frameMB.pack(side=TOP, fill="both")        
-        # *********************************************************************************************************************************                
-        self.listB = Listbox(self.frameM, borderwidth = 0, highlightthickness = 0, selectbackground="#f5f5f5", bg="#000", fg="red", width=40, height=15, selectmode=SINGLE)
-        self.listB.bind('<<ListboxSelect>>', curSelect)
-        self.listB.pack(side=LEFT)
+        self.lb0 = Label(self.frameM, text = "Olá___").pack()
+        self.lb1 = Label(self.frameM, text = "Open : "+ horario() + ' s').pack(side=LEFT)
 
-        itensListB = ['Almirante','Almitante de Esquadra', 'Vice-Almirante', 'Contra-Almirante', 'Capitão de Mar e Guerra', 'Capitão de Fragata', 'Capitão de Corveta', 'Capitão-Tenente', '1o Tenente', '2o Tenente', 'Guarda Marinha', 'Aspirante', 'Suboficial', '1o Sargento', '2o Sargento']
+        self.lb2 = Label(self.frameInput, text = "Chave pública do 2o [E] : ").pack()
+        self.ed2 = Entry(self.frameInput)
+        self.ed2.pack()
+        
+        self.lb3 = Label(self.frameInput, text = "Chave pública Geral do 2o [N] :  ").pack()
+        self.ed3 = Entry(self.frameInput)
+        self.ed3.pack()
 
-        self.listB.insert(0, ' * Selecione sua patente : ')
-        self.listB.insert(1, ' _________________________')
-        self.listB.insert(2, '  ')
+        self.bt_Avancar = Button(self.frameInput, text="Avancar", command=avancar).pack()
+        # ¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
+
+        self.listB = Listbox(self.frameShowKeys, borderwidth = 0, highlightthickness = 0, selectbackground="#f5f5f5", bg="pink", fg="red", width=60, height=25, selectmode=SINGLE)
+        self.listB.pack()
+
+        itensListB = ['Almirante','Almitante de Esquadra', 'Vice-Almirante', 'Contra-Almirante', 'Capitão de Mar e Guerra', 'Capitão de Fragata', 'Capitão de Corveta',
+              'Capitão-Tenente', '1o Tenente', '2o Tenente', 'Guarda Marinha', 'Aspirante', 'Suboficial', '1o Sargento', '2o Sargento']
+
+        self.listB.insert(END, 'SUAS CHAVES : ')
+        self.listB.insert(END, '________________')
+        self.listB.insert(END, '')
+        self.listB.insert(END, 'Chave [E] : ' + str(minha_chaveE))
+        self.listB.insert(END, '')
+        self.listB.insert(END, 'Chave [N] : ' + str(minha_chaveN))
+        self.listB.insert(END, '')
+
+        self.listB.insert(END, 'Selecione sua patente : ')
         
         for i in itensListB :
             self.listB.insert(END, i)
-        # ********************************************************************************************************************************* 
-        def horarioAtual():
-            horario = datetime.now()
-            horario = horario.strftime('%H:%M %Y %S')
-            return horario
-        # ********************************************************************************************************************************* 
-        # *********************************************************************************************************************************  
+            
+        print(minha_chaveE)
+        print(minha_chaveN)
+        print(minha_chaveD)
+        # ¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
+
+
         
-     
+
+
 root = Tk()
-root.geometry("550x550+250+100")
-root.title("Gauss")
+root.geometry("550x575+250+100")
 root.configure(background="black")
 Aplicacao(root)
-root.mainloop()
-
+root.mainloop()               
