@@ -1,93 +1,111 @@
-# Função Enviar Criptografado
+# Chat -- Tkinter -- Sockets
+from tkinter import *
+import socket
+from threading import Thread
+import time
 
-def enviarMensagens():
-   
-   # Mostrando na tela
-   listB.insert(END, 'Eu : '+ mensagem.get())
+root = Tk()
 
-   # Identifica o nome a ser enviado
-   nomeEnvio = '123'
-   nomeEnvio += nome.get() # Referencia a uma Entry/tkinter  
-   
-   ip = '192.168.xx.xx'
+#### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###          LISTA ALFABETO
+alfabeto = ['ª','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9',' ',',','.','+','-','*','/','\\','!','@','#','$','%','&','(',')']
+
+recebe = 'iiiadasd'
+
+
+## -- -- -- --- --- --- -- -- -- ---- ---  Função Recebe mensagens
+
+chaveE = 12345
+chaveN = 6789
+
+def enviarChaves():      
+   print('Entrou no enviarCh')  
+   ip = '192.168.15.2'
    port = 2121
-   add = (ip, port)
-   
+   add = (ip, port)   
    clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
    clientSocket.connect(add)
-   
-    def cifra(x):
-        preCodificadoEnvio = []             # É necessário pré codificar antes de codificar 
-        codificadoRsaEnvio = []             # Armazena os objetos pré codificados
-        codificadoRsaStringEnvio = []       # Armazena os objetos codificados
-
-        # Pré cifragem
-        for i in x:
-            aux3 = alfabeto.index(i) * 10
-            preCodificadoEnvio.append(aux3)
-
-        # Cifragem
-        for i in preCodificadoEnvio:
-            aux4 = (i ** chaveE) % chaveN
-            codificadoRsaEnvio.append(aux4)
-
-        # Int para String -- Para envio
-        for i in codificadoRsaEnvio:
-            aux5 = str(i)
-            codificadoRsaStringEnvio.append(aux5)  
-
-        # Junta os caracteres em uma string
-        codificadoRsaEnvio = '_'.join(codificadoRsaStringEnvio)
-
-    codificadoRsaEnvio = '_'.join(codificadoRsaStringEnvio)    
-   
-   clientSocket.sendto(codificadoRsaEnvio.encode(), (ip, port))
-   mensagem.delete(0, END)
+   time.sleep(2)
+   y = '#1-' + str(chaveE) + "=" + str(chaveN) + '+'    
+   clientSocket.sendto(y.encode(), (ip, port))   
    clientSocket.close()
-
-# Receber Criptografado
+   
 
 def recebeMensagem ():
-   
-   host = '192.168.11.77'
+   global outro_chaveN
+   host = '192.168.15.8'
    port = 2121
-   add = (host, port)
-   
+   add = (host, port)   
    serv_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
    serv_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-
    serv_socket.bind(add)
-   serv_socket.listen(10)   
-
+   serv_socket.listen(10)  
    while True:
       con, cliente = serv_socket.accept()
       recebe = con.recv(2024)
-      recebe = recebe.decode()
-      recebe = recebe.split('_')
+      recebe = recebe.decode()  
+      print('Mensagem Original : ', recebe)   #
 
-      def decripto(recebe):
-          recebeInt = []
-          codificadoRsaRecebimento = []
-          preCodificadoRecebimento = []
+      if (recebe[0] == '#') and (recebe[1] == '1') and (recebe[2] == '-'):
+          print('Ow shit')
+          sliceKeyE = recebe.index('=')
+          outro_chaveE = recebe[3:sliceKeyE]
+          
+          sliceKeyN = recebe.index('+')
+          outro_chaveN = recebe[sliceKeyE+1:sliceKeyN]
+          print(outro_chaveE, '+', outro_chaveN)
+          
+      listB.insert(END, recebe)               
+    
+      
+## -- -- -- --- --- --- -- -- -- ---- ---  Chamando Thread
+if (bool(chaveE) and (chaveN)) :
+   print('Thread Iniciou')   
+   funcao1 = Thread (target=recebeMensagem) 
+   funcao1.start()
+   enviarChaves()  
+## -- -- -- --- --- --- -- -- -- ---- ---  Função Envia mensagens
+def enviarMensagens():      
+   listB.insert(END, 'Eu : '+ mensagem.get())  
+   ip = '192.168.15.2'
+   port = 2121
+   add = (ip, port)   
+   clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+   clientSocket.connect(add)  
+   x = mensagem.get().lower() #
+   print('+++', outro_chaveN)
+   clientSocket.sendto(x.encode(), (ip, port))
+   mensagem.delete(0, END)
+   clientSocket.close()   
 
-          # -- Transformando a variavel recebe(c) em Inteiros
-          for i in  recebe:
-              aux0 = int(i)
-              recebeInt.append(aux0)
-              print(recebeInt)  #       
-  
-          # -- Decodificacao
-          for i in recebeInt:
-              aux1 = (i ** chaveD) % chaveN
-              codificadoRsaRecebimento.append(aux1)
-              print(codificadoRsaRecebimento)  #              
-             
-          # -- des pré Codificação
-          for i in codificadoRsaRecebimento:
-              aux2 = alfabeto[i // 10]
-              preCodificadoRecebimento.append(aux2)
-              print(preCodificadoRecebimento)   #
+## -- -- -- --- --- --- -- -- -- ---- ---  Frames   
+#  Frame Master
+frameM = Frame(root, bg="#f5f5f5") 
+frameM.pack(fill="both")
 
-          # -- Reajuntando a mensagem
-          mensagemOriginal = ''.join(preCodificadoRecebimento)  
+# Frame Inside -- Dentro do Frame Top
+frameInside = Frame(frameM, bg="#f5f5f5") 
+frameInside.pack(fill="both", side =BOTTOM)
+## -- -- -- --- --- --- -- -- -- ---- ---  Frame M
+listB = Listbox(frameM, bg="#ffffff", width=50, height=200,selectmode=SINGLE) 
+listB.pack(side=TOP)
 
+if (recebe != None):
+   listB.insert(END, 'Outro : '+ recebe)
+
+
+## -- -- -- --- --- --- -- -- -- ---- ---  Frame Inside   
+# Entry -- Digitar Mensagem   
+mensagem = Entry(frameInside, width=50, highlightcolor="green") 
+mensagem.pack(side=LEFT, padx=20, pady= 15)
+
+# Botão -- Enviar Mensagem
+enviar = Button(frameInside, width=5, highlightcolor="green", text="enviar", command=enviarMensagens) 
+enviar.pack(side=RIGHT)
+
+
+
+
+
+
+root.geometry("500x500")
+root.mainloop()
