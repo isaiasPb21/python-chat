@@ -55,8 +55,66 @@ class Aplicacao ():
 
         print('P {} * Q {} * N {} * D {} * E {}'.format(numP, numQ, minha_chaveN, minha_chaveD, minha_chaveE))
         # ************************************************
+        
+        # ************************************************
+        # ************************************************
+        # ************************************************
+        def avancar(event):
+            print('Avancar')
+            self.frameUm_nome["bg"] = "yellow"
+            self.frameUm_nome.pack_forget()
+            
+            self.frameNome = Frame(master)                                                   # Frame Show his name
+            self.frameNome.pack(side=TOP, fill="both")
+            
+            self.lbNomeOutro = Label(self.frameNome, text="Nome Outro")
+            self.lbNomeOutro.pack(fill=X, pady=5)
+
+            self.frameShowMessage = Frame(master, bg="yellow", relief=FLAT)             # Show Message
+            self.frameShowMessage.pack(side=TOP, fill="both")
+
+            #
+            def enviarMensagens(event):
+                x = self.message.get()
+                labelMessage = Label(frame, text=x, anchor=W, wraplength=200, bg="orange", width=63)
+                labelMessage.pack(fill="both", padx=5, pady=10, ipadx=5, ipady=10)
+                #labelMessage2 = Label(frame, text=x, anchor=E, wraplength=200, bg="pink", width=63)
+                #labelMessage2.pack(fill="both", padx=5, pady=10, ipadx=5, ipady=10)
+         
+            
+            def myfunction(event):
+                canvas.configure(scrollregion=canvas.bbox("all"),width=550,height=470)
+
+            myframe=Frame(root,relief=FLAT)
+            myframe.pack()
+
+            canvas=Canvas(myframe,width=550,height=470)
+            frame=Frame(canvas)
+            myscrollbar=Scrollbar(myframe,orient="vertical",command=canvas.yview)
+            canvas.configure(yscrollcommand=myscrollbar.set)
+
+            myscrollbar.pack(side="right",fill="y")
+            canvas.pack(side="left")
+            canvas.create_window((0,0),window=frame,anchor=NW)
+            frame.bind("<Configure>",myfunction)
+#
+
+        
+
+
+            self.labelMessage = Label(self.frameShowMessage, text="mensagem", anchor=W, wraplength=200, bg="orange")
+            self.labelMessage.pack(fill=X, padx=5, pady=10, ipadx=5, ipady=10)
+
+            self.frameShowInput = Frame(master, bg="darkgray")                         # Show Input 
+            self.frameShowInput.pack(side=BOTTOM, fill="both")
+
+            self.message = Entry(self.frameShowInput, borderwidth=0, insertbackground="lightgray", bg="darkgray")
+            self.message.focus_set()
+            self.message.bind("<Return>", enviarMensagens)
+            self.message.pack(fill=X, padx=20, pady=10)
+        # ************************************************
         # Nome
-        self.frameUm_nome = Frame(master, bg="lightgray")           # Frame M                                                                                                              
+        self.frameUm_nome = Frame(master, bg="lightgray")                      # Frame M                                                                                                              
         self.frameUm_nome.pack(fill="both", pady=250)
 
 
@@ -66,7 +124,8 @@ class Aplicacao ():
         
         self.ed2 = Entry(self.frameUm_nome, width=30, borderwidth=0, insertbackground="lightgray", bg="lightgray", fg="#000")
         self.ed2.focus_set()
-        self.ed2.pack()
+        self.ed2.bind("<Return>", avancar)
+        self.ed2.pack(pady=5)
 
 
 
