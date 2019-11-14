@@ -76,8 +76,22 @@ class Aplicacao ():
             #
             def enviarMensagens(event):
                 x = self.message.get()
-                labelMessage = Label(frame, text=x, anchor=W, wraplength=200, bg="orange", width=63)
+                print('Enviando')
+                   
+                ip = '192.168.15.9'
+                port = 2121
+                add = (ip, port)
+           
+                clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                clientSocket.connect(add)
+                print("Enviando ... ")
+                clientSocket.sendto(x.encode(), (ip, port))
+                print("Enviado")
+                self.message.delete(0, END)
+                
+                labelMessage = Label(frame, text=x, anchor=E, wraplength=200, bg="darkgray", width=63)
                 labelMessage.pack(fill="both", padx=5, pady=10, ipadx=5, ipady=10)
+                self.message.delete(0, END)
                 #labelMessage2 = Label(frame, text=x, anchor=E, wraplength=200, bg="pink", width=63)
                 #labelMessage2.pack(fill="both", padx=5, pady=10, ipadx=5, ipady=10)
          
@@ -102,7 +116,7 @@ class Aplicacao ():
         
 
 
-            self.labelMessage = Label(self.frameShowMessage, text="mensagem", anchor=W, wraplength=200, bg="orange")
+            self.labelMessage = Label(self.frameShowMessage, text="Sessão de chat criptografado ponta a ponta", wraplength=250, bg="orange")
             self.labelMessage.pack(fill=X, padx=5, pady=10, ipadx=5, ipady=10)
 
             self.frameShowInput = Frame(master, bg="darkgray")                         # Show Input 
