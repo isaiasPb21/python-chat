@@ -129,16 +129,35 @@ class Aplicacao ():
                 clientSocket.connect(add)
 
                 # Chaves
-                outro_chaveE = 13#int(outro_chaveE)
-                outro_chaveN = 55#int(outro_chaveN)
+                outro_chaveE = int(outro_chaveE)
+                outro_chaveN = int(outro_chaveN)
+                print('Area de envio : chave E {}, chave N : {}'.format(outro_chaveE,outro_chaveN))
                 
                 # Mensagem
                 x = self.message.get().lower()
                 print(x)         
-                
- 
+                 # Pré Cifragem   
+                preCodificadoEnvio = []      
+                codificadoRsaEnvio = []
+                codificadoRsaStringEnvio = []
+       
+                for i in x:
+                   aux3 = alfabeto.index(i) * 10
+                   preCodificadoEnvio.append(aux3)
+
+                # Cifragem
+                for i in preCodificadoEnvio:
+                   aux4 = (i ** outro_chaveE) % outro_chaveN
+                   codificadoRsaEnvio.append(aux4)
+
+                for i in codificadoRsaEnvio:
+                   aux5 = str(i)
+                   codificadoRsaStringEnvio.append(aux5)
+      
+                codificadoRsaEnvio = '_'.join(codificadoRsaStringEnvio)    
+
                 print("Enviando ... ")
-                clientSocket.sendto(x.encode(), (ip, port))
+                clientSocket.sendto(codificadoRsaEnvio.encode(), (ip, port))
                 print("Enviado")
                 self.message.delete(0, END)
                 
