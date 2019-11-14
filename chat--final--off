@@ -98,11 +98,13 @@ class Aplicacao ():
                       
                      sliceKeyN = recebe.index('+')
                      outro_chaveN = recebe[sliceKeyE+1:sliceKeyN]
-                     print('Chaves Recebidas ', outro_chaveE, '+', outro_chaveN)
+                     print('Chaves Recebidas E {}, N {}'.format(outro_chaveE,outro_chaveN))
 
                      sliceName = recebe.index('*')
-                     nomeOutro = recebe[sliceKeyN:sliceName+1]
+                     nomeOutro = recebe[sliceKeyN+1:sliceName]
                      print('Nome : ', nomeOutro)
+
+                     self.lbNomeOutro["text"] = nomeOutro
                      
                  labelMessage2 = Label(self.frame, text=recebe, anchor=W, wraplength=200, bg="#f5f5f5", width=63)
                  labelMessage2.pack(fill="both", padx=5, pady=10, ipadx=5, ipady=10)   
