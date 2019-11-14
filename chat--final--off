@@ -70,7 +70,7 @@ class Aplicacao ():
                clientSocket.close()
             except ConnectionRefusedError:
                print('ConnectionRefusedError : Não foi possivel enviar as chaves')
-        enviarChaves(5)
+        
 
         # ************************************************
         # ************************************************
@@ -81,7 +81,8 @@ class Aplicacao ():
             serv_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             serv_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             serv_socket.bind(add)
-            serv_socket.listen(10)  
+            serv_socket.listen(10)
+            enviarChaves(5)
             while True:
                  global outro_chaveE, outro_chaveN
                  con, cliente = serv_socket.accept()
@@ -103,6 +104,7 @@ class Aplicacao ():
 
         # ************************************************
         def avancar(event):
+            time.sleep(5)
             print('Avancar')
             self.frameUm_nome["bg"] = "yellow"
             self.frameUm_nome.pack_forget()
@@ -117,7 +119,8 @@ class Aplicacao ():
             self.frameShowMessage.pack(side=TOP, fill="both")
 
            # ************************************************
-            def enviarMensagens(event):                
+            def enviarMensagens(event):
+                global outro_chaveE, outro_chaveN
                 print('Enviando')                   
                 ip = '192.168.15.9'
                 port = 2121
@@ -125,32 +128,14 @@ class Aplicacao ():
                 clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 clientSocket.connect(add)
 
-                '''# Chaves
-                outro_chaveE = 71
-                outro_chaveN = 1073'''
-            
+                # Chaves
+                outro_chaveE = 13#int(outro_chaveE)
+                outro_chaveN = 55#int(outro_chaveN)
+                
                 # Mensagem
                 x = self.message.get().lower()
-                print(x)
+                print(x)         
                 
-                '''# Pré Cifragem   
-                preCodificadoEnvio = []      
-                codificadoRsaEnvio = []
-                codificadoRsaStringEnvio = []
-                
-                for i in x:
-                    aux3 = alfabeto.index(i) * 10
-                    preCodificadoEnvio.append(aux3)
-
-                # Cifragem
-                for i in preCodificadoEnvio:
-                    aux4 = (i ** outro_chaveE) % outro_chaveN
-                    codificadoRsaEnvio.append(aux4)
-                for i in codificadoRsaEnvio:
-                    aux5 = str(i)
-                    codificadoRsaStringEnvio.append(aux5)
-          
-                codificadoRsaEnvio = '_'.join(codificadoRsaStringEnvio)''' 
  
                 print("Enviando ... ")
                 clientSocket.sendto(x.encode(), (ip, port))
@@ -192,8 +177,8 @@ class Aplicacao ():
             self.message.bind("<Return>", enviarMensagens)
             self.message.pack(fill=X, padx=20, pady=10)
 
-        funcao1 = Thread (target=recebeMensagem) 
-        funcao1.start()
+            funcao1 = Thread (target=recebeMensagem) 
+            funcao1.start()
             
         # ************************************************
         # Nome
