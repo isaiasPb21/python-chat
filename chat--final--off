@@ -1,0 +1,79 @@
+from threading import *   
+from datetime import *
+from tkinter import *
+from tkinter import messagebox  
+import socket
+import time
+import random
+
+class Aplicacao ():
+    def __init__(self, master=None):        
+        self.fontePadrao = ("Verdana", "13")
+
+        alfabeto = ['ª','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','â','ã','é','ç','õ','0','1','2','3','4','5','6','7','8','9',' ',',','.','+','-','*',':','/','\\','!','@','#','$','%','&','(',')']
+
+        # ********************************************************************************************************************** FUNÇÕES
+        def horario():
+            horario = datetime.now()
+            horario = horario.strftime('%H:%M %Y %S')
+            return horario
+        # ************************************************
+        # ************************************************
+        def calcAlea (fim=1000):                 
+            aleatorio = random.randint(0,fim)
+            return aleatorio
+
+        def calcPrimo (num):                      
+            acumulador = 0
+            for n in range(1,num+1,1):
+                aux = (num % n)
+                if aux == 0:
+                    acumulador += 1
+                if (aux ==0) and (n != 1) and (n !=num):
+                    return calcPrimo(num+1)
+            if acumulador <= 2:
+                return num
+        
+        numP = calcPrimo(calcAlea())     
+        numQ = calcPrimo(calcAlea())
+
+        feedN = ((numP-1) * (numQ-1))                   
+
+        minha_chaveE = calcPrimo(calcAlea(feedN-200))
+        minha_chaveN = (numP * numQ)
+
+        chaves = (minha_chaveE, minha_chaveN)
+
+        minha_chaveD = 0
+        x=0
+        while x < minha_chaveN:
+            r = (x * minha_chaveE) % feedN
+            if r == 1:
+                minha_chaveD = x
+                break
+            x += 1
+
+        print('P {} * Q {} * N {} * D {} * E {}'.format(numP, numQ, minha_chaveN, minha_chaveD, minha_chaveE))
+        # ************************************************
+        # Nome
+        self.frameUm_nome = Frame(master, bg="lightgray")           # Frame M                                                                                                              
+        self.frameUm_nome.pack(fill="both", pady=250)
+
+
+        self.lb1 = Label(self.frameUm_nome, text = "Open : "+ horario() + ' s', anchor=W, fg="#000").pack(fill=X)
+
+        self.lb2 = Label(self.frameUm_nome, text = "Nome : ", anchor=W, fg="#000").pack(fill=X, padx=150)
+        
+        self.ed2 = Entry(self.frameUm_nome, width=30, borderwidth=0, insertbackground="lightgray", bg="lightgray", fg="#000")
+        self.ed2.focus_set()
+        self.ed2.pack()
+
+
+
+
+
+root = Tk()
+root.geometry("550x620+250+80")
+root.configure(background="#a0a0a0")
+Aplicacao(root)
+root.mainloop()  
