@@ -75,7 +75,7 @@ class Aplicacao ():
 
             #
             def enviarMensagens(event):
-                x = self.message.get()
+                
                 print('Enviando')
                    
                 ip = '192.168.15.9'
@@ -84,8 +84,38 @@ class Aplicacao ():
            
                 clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 clientSocket.connect(add)
+
+                         # Chaves
+                outro_chaveE = 71
+                outro_chaveN = 1073
+            
+                # Mensagem
+
+                x = self.message.get().lower()
+                print(x)
+                
+                # Pré Cifragem   
+                preCodificadoEnvio = []      
+                codificadoRsaEnvio = []
+                codificadoRsaStringEnvio = []
+                
+                for i in x:
+                    aux3 = alfabeto.index(i) * 10
+                    preCodificadoEnvio.append(aux3)
+
+                # Cifragem
+                for i in preCodificadoEnvio:
+                    aux4 = (i ** outro_chaveE) % outro_chaveN
+                    codificadoRsaEnvio.append(aux4)
+                for i in codificadoRsaEnvio:
+                    aux5 = str(i)
+                    codificadoRsaStringEnvio.append(aux5)
+          
+                codificadoRsaEnvio = '_'.join(codificadoRsaStringEnvio)  
+
+ 
                 print("Enviando ... ")
-                clientSocket.sendto(x.encode(), (ip, port))
+                clientSocket.sendto(codificadoRsaEnvio.encode(), (ip, port))
                 print("Enviado")
                 self.message.delete(0, END)
                 
