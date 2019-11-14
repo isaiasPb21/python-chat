@@ -104,6 +104,7 @@ class Aplicacao ():
 
         # ************************************************
         def avancar(event):
+            
             time.sleep(5)
             print('Avancar')
             self.frameUm_nome["bg"] = "yellow"
