@@ -57,6 +57,7 @@ class Aplicacao ():
         # ************************************************
         def enviarChaves(delay):
             try:
+               nome = self.ed2.get()
                print('Entrou no enviarCh')  
                ip = '192.168.15.9'
                port = 2121
@@ -64,7 +65,7 @@ class Aplicacao ():
                clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                time.sleep(delay)  
                clientSocket.connect(add)   
-               y = '#1-' + str(minha_chaveE) + "=" + str(minha_chaveN) + '+'
+               y = '#1-' + str(minha_chaveE) + "=" + str(minha_chaveN) + '+' + nome + '*'
                clientSocket.sendto(y.encode(), (ip, port))   
                print('Chaves que foi enviada' + y)
                clientSocket.close()
@@ -98,6 +99,10 @@ class Aplicacao ():
                      sliceKeyN = recebe.index('+')
                      outro_chaveN = recebe[sliceKeyE+1:sliceKeyN]
                      print('Chaves Recebidas ', outro_chaveE, '+', outro_chaveN)
+
+                     sliceName = recebe.index('*')
+                     nomeOutro = recebe[sliceKeyN:sliceName+1]
+                     print('Nome : ', nomeOutro)
                      
                  labelMessage2 = Label(self.frame, text=recebe, anchor=W, wraplength=200, bg="#f5f5f5", width=63)
                  labelMessage2.pack(fill="both", padx=5, pady=10, ipadx=5, ipady=10)   
