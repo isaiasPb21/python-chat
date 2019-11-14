@@ -119,21 +119,21 @@ class Aplicacao ():
                 print("Enviado")
                 self.message.delete(0, END)
                 
-                labelMessage = Label(frame, text=x, anchor=E, wraplength=200, bg="darkgray", width=63)
-                labelMessage.pack(fill="both", padx=5, pady=10, ipadx=5, ipady=10)
+                labelMessage = Label(frame, text=x, anchor=E, wraplength=200, bg="#005eff", width=63)
+                labelMessage.pack(fill="both", padx=5, pady=10, ipadx=10, ipady=10)
                 self.message.delete(0, END)
-                #labelMessage2 = Label(frame, text=x, anchor=E, wraplength=200, bg="pink", width=63)
-                #labelMessage2.pack(fill="both", padx=5, pady=10, ipadx=5, ipady=10)
+                labelMessage2 = Label(frame, text=x, anchor=W, wraplength=200, bg="lightblue", width=63)
+                labelMessage2.pack(fill="both", padx=5, pady=10, ipadx=5, ipady=10)
          
             
             def myfunction(event):
-                canvas.configure(scrollregion=canvas.bbox("all"),width=550,height=470)
+                canvas.configure(scrollregion=canvas.bbox("all"),width=550,height=470, bg="#dcdcdc")
 
             myframe=Frame(root,relief=FLAT)
             myframe.pack()
 
-            canvas=Canvas(myframe,width=550,height=470)
-            frame=Frame(canvas)
+            canvas=Canvas(myframe,width=550,height=470, bg="#dcdcdc")
+            frame=Frame(canvas, bg="#dcdcdc")
             myscrollbar=Scrollbar(myframe,orient="vertical",command=canvas.yview)
             canvas.configure(yscrollcommand=myscrollbar.set)
 
@@ -149,24 +149,24 @@ class Aplicacao ():
             self.labelMessage = Label(self.frameShowMessage, text="Sessão de chat criptografado ponta a ponta", wraplength=250, bg="orange")
             self.labelMessage.pack(fill=X, padx=5, pady=10, ipadx=5, ipady=10)
 
-            self.frameShowInput = Frame(master, bg="darkgray")                         # Show Input 
+            self.frameShowInput = Frame(master, bg="yellow")                         # Show Input 
             self.frameShowInput.pack(side=BOTTOM, fill="both")
 
-            self.message = Entry(self.frameShowInput, borderwidth=0, insertbackground="lightgray", bg="darkgray")
+            self.message = Entry(self.frameShowInput, borderwidth=0, insertbackground="lightgray", bg="orange")
             self.message.focus_set()
             self.message.bind("<Return>", enviarMensagens)
             self.message.pack(fill=X, padx=20, pady=10)
         # ************************************************
         # Nome
-        self.frameUm_nome = Frame(master, bg="lightgray")                      # Frame M                                                                                                              
+        self.frameUm_nome = Frame(master, bg="#ff71ff")                      # Frame M                                                                                                              
         self.frameUm_nome.pack(fill="both", pady=250)
 
 
-        self.lb1 = Label(self.frameUm_nome, text = "Open : "+ horario() + ' s', anchor=W, fg="#000").pack(fill=X)
+        self.lb1 = Label(self.frameUm_nome, text = "Open : "+ horario() + ' s', anchor=W, fg="#fff", bg="#ff71ff").pack(fill=X)
 
-        self.lb2 = Label(self.frameUm_nome, text = "Nome : ", anchor=W, fg="#000").pack(fill=X, padx=150)
+        self.lb2 = Label(self.frameUm_nome, text = "Nome : ", anchor=W, fg="#fff", bg="#ff71ff").pack(fill=X, padx=150)
         
-        self.ed2 = Entry(self.frameUm_nome, width=30, borderwidth=0, insertbackground="lightgray", bg="lightgray", fg="#000")
+        self.ed2 = Entry(self.frameUm_nome, width=30, borderwidth=0, insertbackground="lightgray", bg="#ff71ff", fg="#fff")
         self.ed2.focus_set()
         self.ed2.bind("<Return>", avancar)
         self.ed2.pack(pady=5)
@@ -177,6 +177,6 @@ class Aplicacao ():
 
 root = Tk()
 root.geometry("550x620+250+80")
-root.configure(background="#a0a0a0")
+root.configure(background="#fad2fa")
 Aplicacao(root)
 root.mainloop()  
