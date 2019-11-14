@@ -55,9 +55,52 @@ class Aplicacao ():
 
         print('P {} * Q {} * N {} * D {} * E {}'.format(numP, numQ, minha_chaveN, minha_chaveD, minha_chaveE))
         # ************************************************
-        
+        def enviarChaves(delay):
+            try:
+               print('Entrou no enviarCh')  
+               ip = '192.168.15.9'
+               port = 2121
+               add = (ip, port)   
+               clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+               time.sleep(delay)  
+               clientSocket.connect(add)   
+               y = '#1-' + str(minha_chaveE) + "=" + str(minha_chaveN) + '+'
+               clientSocket.sendto(y.encode(), (ip, port))   
+               print('Chaves que foi enviada' + y)
+               clientSocket.close()
+            except ConnectionRefusedError:
+               print('ConnectionRefusedError : Não foi possivel enviar as chaves')
+        enviarChaves(5)
+
         # ************************************************
         # ************************************************
+        def recebeMensagem ():
+            host = '192.168.15.8'
+            port = 2121
+            add = (host, port)   
+            serv_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            serv_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            serv_socket.bind(add)
+            serv_socket.listen(10)  
+            while True:
+                 global outro_chaveE, outro_chaveN
+                 con, cliente = serv_socket.accept()
+                 recebe = con.recv(2024)
+                 recebe = recebe.decode()  
+                 print('Mensagem Recebida : ', recebe)   #
+                 
+                 if (recebe[0] == '#') and (recebe[1] == '1') and (recebe[2] == '-'):
+                     print('Ow shit')
+                     sliceKeyE = recebe.index('=')
+                     outro_chaveE = recebe[3:sliceKeyE]
+                      
+                     sliceKeyN = recebe.index('+')
+                     outro_chaveN = recebe[sliceKeyE+1:sliceKeyN]
+                     print('Chaves Recebidas ', outro_chaveE, '+', outro_chaveN)
+                     
+                 labelMessage2 = Label(self.frame, text=recebe, anchor=W, wraplength=200, bg="#f5f5f5", width=63)
+                 labelMessage2.pack(fill="both", padx=5, pady=10, ipadx=5, ipady=10)   
+
         # ************************************************
         def avancar(event):
             print('Avancar')
@@ -73,28 +116,24 @@ class Aplicacao ():
             self.frameShowMessage = Frame(master, bg="yellow", relief=FLAT)             # Show Message
             self.frameShowMessage.pack(side=TOP, fill="both")
 
-            #
-            def enviarMensagens(event):
-                
-                print('Enviando')
-                   
+           # ************************************************
+            def enviarMensagens(event):                
+                print('Enviando')                   
                 ip = '192.168.15.9'
                 port = 2121
-                add = (ip, port)
-           
+                add = (ip, port)           
                 clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 clientSocket.connect(add)
 
-                         # Chaves
+                '''# Chaves
                 outro_chaveE = 71
-                outro_chaveN = 1073
+                outro_chaveN = 1073'''
             
                 # Mensagem
-
                 x = self.message.get().lower()
                 print(x)
                 
-                # Pré Cifragem   
+                '''# Pré Cifragem   
                 preCodificadoEnvio = []      
                 codificadoRsaEnvio = []
                 codificadoRsaStringEnvio = []
@@ -111,40 +150,36 @@ class Aplicacao ():
                     aux5 = str(i)
                     codificadoRsaStringEnvio.append(aux5)
           
-                codificadoRsaEnvio = '_'.join(codificadoRsaStringEnvio)  
-
+                codificadoRsaEnvio = '_'.join(codificadoRsaStringEnvio)''' 
  
                 print("Enviando ... ")
-                clientSocket.sendto(codificadoRsaEnvio.encode(), (ip, port))
+                clientSocket.sendto(x.encode(), (ip, port))
                 print("Enviado")
                 self.message.delete(0, END)
                 
-                labelMessage = Label(frame, text=x, anchor=E, wraplength=200, bg="#005eff", width=63)
+                labelMessage = Label(self.frame, text=x, anchor=E, wraplength=200, bg="lightgray", width=63)
                 labelMessage.pack(fill="both", padx=5, pady=10, ipadx=10, ipady=10)
                 self.message.delete(0, END)
-                labelMessage2 = Label(frame, text=x, anchor=W, wraplength=200, bg="lightblue", width=63)
-                labelMessage2.pack(fill="both", padx=5, pady=10, ipadx=5, ipady=10)
-         
-            
+      
+           # ************************************************            
             def myfunction(event):
                 canvas.configure(scrollregion=canvas.bbox("all"),width=550,height=470, bg="#dcdcdc")
-
-            myframe=Frame(root,relief=FLAT)
-            myframe.pack()
-
-            canvas=Canvas(myframe,width=550,height=470, bg="#dcdcdc")
-            frame=Frame(canvas, bg="#dcdcdc")
-            myscrollbar=Scrollbar(myframe,orient="vertical",command=canvas.yview)
+                
+           # ************************************************
+           
+            self.myframe=Frame(master,relief=FLAT)
+            self.myframe.pack()         
+        
+            canvas=Canvas(self.myframe,width=550,height=470, bg="#dcdcdc")
+            self.frame=Frame(canvas, bg="#dcdcdc")
+            myscrollbar=Scrollbar(self.myframe,orient="vertical",command=canvas.yview)
             canvas.configure(yscrollcommand=myscrollbar.set)
 
             myscrollbar.pack(side="right",fill="y")
             canvas.pack(side="left")
-            canvas.create_window((0,0),window=frame,anchor=NW)
-            frame.bind("<Configure>",myfunction)
-#
-
-        
-
+            canvas.create_window((0,0),window=self.frame,anchor=NW)
+            self.frame.bind("<Configure>",myfunction)
+    
 
             self.labelMessage = Label(self.frameShowMessage, text="Sessão de chat criptografado ponta a ponta", wraplength=250, bg="orange")
             self.labelMessage.pack(fill=X, padx=5, pady=10, ipadx=5, ipady=10)
@@ -156,24 +191,23 @@ class Aplicacao ():
             self.message.focus_set()
             self.message.bind("<Return>", enviarMensagens)
             self.message.pack(fill=X, padx=20, pady=10)
+
+        funcao1 = Thread (target=recebeMensagem) 
+        funcao1.start()
+            
         # ************************************************
         # Nome
         self.frameUm_nome = Frame(master, bg="#ff71ff")                      # Frame M                                                                                                              
         self.frameUm_nome.pack(fill="both", pady=250)
 
-
+        # Label + Entry
         self.lb1 = Label(self.frameUm_nome, text = "Open : "+ horario() + ' s', anchor=W, fg="#fff", bg="#ff71ff").pack(fill=X)
-
         self.lb2 = Label(self.frameUm_nome, text = "Nome : ", anchor=W, fg="#fff", bg="#ff71ff").pack(fill=X, padx=150)
         
         self.ed2 = Entry(self.frameUm_nome, width=30, borderwidth=0, insertbackground="lightgray", bg="#ff71ff", fg="#fff")
         self.ed2.focus_set()
         self.ed2.bind("<Return>", avancar)
         self.ed2.pack(pady=5)
-
-
-
-
 
 root = Tk()
 root.geometry("550x620+250+80")
