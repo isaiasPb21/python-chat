@@ -106,7 +106,7 @@ class Aplicacao ():
 
                      self.lbNomeOutro["text"] = nomeOutro
                      
-                 labelMessage2 = Label(self.frame, text=recebe, anchor=W, wraplength=200, bg="#f5f5f5", width=63)
+                 labelMessage2 = Label(self.frame, text=recebe, anchor=W, wraplength=200, bg="#faa6f4", width=63)
                  labelMessage2.pack(fill="both", padx=5, pady=10, ipadx=5, ipady=10)   
 
         # ************************************************
@@ -120,15 +120,24 @@ class Aplicacao ():
             self.frameNome = Frame(master)                                                   # Frame Show his name
             self.frameNome.pack(side=TOP, fill="both")
             
-            self.lbNomeOutro = Label(self.frameNome, text="Nome Outro")
+            self.lbNomeOutro = Label(self.frameNome, text="Nome Outro", bg="#ff71ff")
             self.lbNomeOutro.pack(fill=X, pady=5)
 
-            self.frameShowMessage = Frame(master, bg="yellow", relief=FLAT)             # Show Message
+            self.frameShowMessage = Frame(master, bg="#ff71ff", relief=FLAT)             # Show Message
             self.frameShowMessage.pack(side=TOP, fill="both")
 
            # ************************************************
             def enviarMensagens(event):
                 global outro_chaveE, outro_chaveN
+
+                # Mensagem
+                x = self.message.get().lower()
+                print(x)       
+
+                # Mostrar  
+                labelMessage = Label(self.frame, text=x, anchor=E, wraplength=200, bg="#fdc5f8", width=63)
+                labelMessage.pack(fill="both", padx=5, pady=10, ipadx=10, ipady=10)
+                
                 print('Enviando')                   
                 ip = '192.168.15.9'
                 port = 2121
@@ -141,9 +150,7 @@ class Aplicacao ():
                 outro_chaveN = int(outro_chaveN)
                 print('Area de envio : chave E {}, chave N : {}'.format(outro_chaveE,outro_chaveN))
                 
-                # Mensagem
-                x = self.message.get().lower()
-                print(x)         
+  
                  # Pré Cifragem   
                 preCodificadoEnvio = []      
                 codificadoRsaEnvio = []
@@ -168,23 +175,21 @@ class Aplicacao ():
                 clientSocket.sendto(codificadoRsaEnvio.encode(), (ip, port))
                 print("Enviado")
                 self.message.delete(0, END)
-                
-                labelMessage = Label(self.frame, text=x, anchor=E, wraplength=200, bg="lightgray", width=63)
-                labelMessage.pack(fill="both", padx=5, pady=10, ipadx=10, ipady=10)
+
                 self.message.delete(0, END)
       
            # ************************************************            
             def myfunction(event):
-                canvas.configure(scrollregion=canvas.bbox("all"),width=550,height=470, bg="#dcdcdc")
+                canvas.configure(scrollregion=canvas.bbox("all"),width=550,height=470, bg="#ffe2fc")
                 
            # ************************************************
            
-            self.myframe=Frame(master,relief=FLAT)
+            self.myframe=Frame(master,relief=FLAT, bg="#ffe2fc")
             self.myframe.pack()         
         
-            canvas=Canvas(self.myframe,width=550,height=470, bg="#dcdcdc")
-            self.frame=Frame(canvas, bg="#dcdcdc")
-            myscrollbar=Scrollbar(self.myframe,orient="vertical",command=canvas.yview)
+            canvas=Canvas(self.myframe,width=550,height=470, bg="#ffe2fc")
+            self.frame=Frame(canvas, bg="#ffe2fc")
+            myscrollbar=Scrollbar(self.myframe,orient="vertical",command=canvas.yview, bg="#ff71ff")
             canvas.configure(yscrollcommand=myscrollbar.set)
 
             myscrollbar.pack(side="right",fill="y")
@@ -193,13 +198,13 @@ class Aplicacao ():
             self.frame.bind("<Configure>",myfunction)
     
 
-            self.labelMessage = Label(self.frameShowMessage, text="Sessão de chat criptografado ponta a ponta", wraplength=250, bg="orange")
+            self.labelMessage = Label(self.frameShowMessage, text="Sessão de chat criptografado ponta a ponta", wraplength=250, bg="#ffe2fc")
             self.labelMessage.pack(fill=X, padx=5, pady=10, ipadx=5, ipady=10)
 
-            self.frameShowInput = Frame(master, bg="yellow")                         # Show Input 
+            self.frameShowInput = Frame(master, bg="#ff71ff")                         # Show Input 
             self.frameShowInput.pack(side=BOTTOM, fill="both")
 
-            self.message = Entry(self.frameShowInput, borderwidth=0, insertbackground="lightgray", bg="orange")
+            self.message = Entry(self.frameShowInput, borderwidth=0, insertbackground="lightgray", bg="#ffe2fc")
             self.message.focus_set()
             self.message.bind("<Return>", enviarMensagens)
             self.message.pack(fill=X, padx=20, pady=10)
@@ -223,6 +228,6 @@ class Aplicacao ():
 
 root = Tk()
 root.geometry("550x620+250+80")
-root.configure(background="#fad2fa")
+root.configure(background="#ffe2fc")
 Aplicacao(root)
 root.mainloop()  
