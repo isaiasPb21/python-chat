@@ -38,22 +38,20 @@ class Aplicacao ():
             if acumulador <= 2:                       # caso o número seja dividido por apenas dois números
                 return num                                 # retorna num
         
-        numP = calcPrimo(calcAlea())     
-        numQ = calcPrimo(calcAlea())
+        numP = calcPrimo(calcAlea())     # numP recebe um número aleatório primo
+        numQ = calcPrimo(calcAlea())    # numP recebe um número aleatório primo
 
-        feedN = ((numP-1) * (numQ-1))                   
+        feedN = ((numP-1) * (numQ-1))     # feedN recebe a operação para calcular o 'fi' de N            
 
-        minha_chaveE = calcPrimo(calcAlea(feedN-200))
+        minha_chaveE = calcPrimo(calcAlea(feedN-200)) # número primo, menor que feedN, para não ter erro, parâmetro feedN - 200
         minha_chaveN = (numP * numQ)
 
-        chaves = (minha_chaveE, minha_chaveN)
-
-        minha_chaveD = 0
-        x=0
-        while x < minha_chaveN:
-            r = (x * minha_chaveE) % feedN
-            if r == 1:
-                minha_chaveD = x
+        minha_chaveD = 0                              # --- Calculo chaveD 
+        x=0                                                        # contador x           
+        while x < minha_chaveN:                   # repetirá até encontrar um valor, menor que N, que satisfaça a seguinte fórmula :
+            r = (x * minha_chaveE) % feedN  # r = auxiliar, logo, se r = ('x' x minha_chaveE) % feedN == 1
+            if r == 1:                          
+                minha_chaveD = x                      # se r == 1, o laço para, e x passa a ser minha_chaveD
                 break
             x += 1
 
