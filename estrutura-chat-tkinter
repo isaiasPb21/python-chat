@@ -142,20 +142,19 @@ class Aplicacao ():
 
 
         # ************************************************
-        def avancar(event):
+        def avancar(event):            
+            time.sleep(5)                                                                                    # segurar o andamento em 5 segundos
+           
+            self.frameUm_nome["bg"] = "yellow"                              
+            self.frameUm_nome.pack_forget()                                             # esquecer frame
             
-            time.sleep(5)
-            print('Avancar')
-            self.frameUm_nome["bg"] = "yellow"
-            self.frameUm_nome.pack_forget()
-            
-            self.frameNome = Frame(master)                                                   # Frame Show his name
+            self.frameNome = Frame(master)                                               # frame 'frameNome', topo da tela para exibir nome do outro usuario
             self.frameNome.pack(side=TOP, fill="both")
             
-            self.lbNomeOutro = Label(self.frameNome, text="Nome Outro", bg="#ff71ff")
+            self.lbNomeOutro = Label(self.frameNome, text="Nome Outro", bg="#ff71ff") # label para exibir o nome no 'frameNome'
             self.lbNomeOutro.pack(fill=X, pady=5)
 
-            self.frameShowMessage = Frame(master, bg="#ff71ff", relief=FLAT)             # Show Message
+            self.frameShowMessage = Frame(master, bg="#ff71ff", relief=FLAT)# frame 'frameShowMessage', conterá as mensagens na tela
             self.frameShowMessage.pack(side=TOP, fill="both")
 
            # ************************************************
