@@ -167,44 +167,47 @@ class Aplicacao ():
                 # Mostrar  
                 labelMessage = Label(self.frame, text=x, anchor=E, wraplength=200, bg="#fdc5f8", width=63)
                 labelMessage.pack(fill="both", padx=5, pady=10, ipadx=10, ipady=10)
-                
-                print('Enviando')                   
-                ip = '192.168.15.9'
-                port = 2121
-                add = (ip, port)           
-                clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                clientSocket.connect(add)
 
-                # Chaves
-                outro_chaveE = int(outro_chaveE)
-                outro_chaveN = int(outro_chaveN)
-                print('Area de envio : chave E {}, chave N : {}'.format(outro_chaveE,outro_chaveN))
-                
-  
-                 # Pré Cifragem   
-                preCodificadoEnvio = []      
-                codificadoRsaEnvio = []
-                codificadoRsaStringEnvio = []
-       
-                for i in x:
-                   aux3 = alfabeto.index(i) * 10
-                   preCodificadoEnvio.append(aux3)
+                try:
+                    print('Enviando')                   
+                    ip = '192.168.15.9'
+                    port = 2121
+                    add = (ip, port)           
+                    clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    clientSocket.connect(add)
 
-                # Cifragem
-                for i in preCodificadoEnvio:
-                   aux4 = (i ** outro_chaveE) % outro_chaveN
-                   codificadoRsaEnvio.append(aux4)
-
-                for i in codificadoRsaEnvio:
-                   aux5 = str(i)
-                   codificadoRsaStringEnvio.append(aux5)
+                    # Chaves
+                    outro_chaveE = int(outro_chaveE)
+                    outro_chaveN = int(outro_chaveN)
+                    print('Area de envio : chave E {}, chave N : {}'.format(outro_chaveE,outro_chaveN))
+                    
       
-                codificadoRsaEnvio = '_'.join(codificadoRsaStringEnvio)    
+                     # Pré Cifragem   
+                    preCodificadoEnvio = []      
+                    codificadoRsaEnvio = []
+                    codificadoRsaStringEnvio = []
+           
+                    for i in x:
+                       aux3 = alfabeto.index(i) * 10
+                       preCodificadoEnvio.append(aux3)
 
-                print("Enviando ... ")
-                clientSocket.sendto(codificadoRsaEnvio.encode(), (ip, port))
-                print("Enviado")
-                self.message.delete(0, END)
+                    # Cifragem
+                    for i in preCodificadoEnvio:
+                       aux4 = (i ** outro_chaveE) % outro_chaveN
+                       codificadoRsaEnvio.append(aux4)
+
+                    for i in codificadoRsaEnvio:
+                       aux5 = str(i)
+                       codificadoRsaStringEnvio.append(aux5)
+          
+                    codificadoRsaEnvio = '_'.join(codificadoRsaStringEnvio)    
+
+                    print("Enviando ... ")
+                    clientSocket.sendto(codificadoRsaEnvio.encode(), (ip, port))
+                    print("Enviado")
+                    self.message.delete(0, END)
+                except ConnectionRefusedError:
+                    print("Não foi possivel enviar sua mensagem")
 
                 self.message.delete(0, END)
       
