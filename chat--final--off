@@ -1,7 +1,6 @@
 from threading import *   
 from datetime import *
-from tkinter import *
-from tkinter import messagebox  
+from tkinter import *  
 import socket
 import time
 import random
@@ -10,7 +9,7 @@ class Aplicacao ():
     def __init__(self, master=None):        
         self.fontePadrao = ("Verdana", "13")
 
-        alfabeto = ['ª','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','â','ã','é','ç','õ','0','1','2','3','4','5','6','7','8','9',' ',',','.','+','-','*',':','/','\\','!','@','#','$','%','&','(',')']
+        alfabeto = ['ª','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','â','ã','á','à','é','ç','õ','0','1','2','3','4','5','6','7','8','9',' ',',','.','+','-','*',':','/','\\','!','@','#','$','%','&','(',')']
 
         # ********************************************************************************************************************** FUNÇÕES
         def horario():
@@ -134,7 +133,7 @@ class Aplicacao ():
                      mensagemOriginal = ''.join(preCodificadoRecebimento)
                      print('Mensagem Original : ', mensagemOriginal.capitalize())   #'''
                
-                     labelMessage2 = Label(self.frame, text=mensagemOriginal.capitalize(), anchor=W, wraplength=200, bg="#faa6f4", width=63)
+                     labelMessage2 = Label(self.frame, text=mensagemOriginal.capitalize(), anchor=W, wraplength=200, bg="#B0C4DE", width=63)
                      labelMessage2.pack(fill="both", padx=5, pady=10, ipadx=5, ipady=10)   
                  #labelMessage2 = Label(self.frame, text=recebe, anchor=W, wraplength=200, bg="#faa6f4", width=63)
                  #labelMessage2.pack(fill="both", padx=5, pady=10, ipadx=5, ipady=10)   
@@ -147,13 +146,13 @@ class Aplicacao ():
             self.frameUm_nome["bg"] = "yellow"
             self.frameUm_nome.pack_forget()
             
-            self.frameNome = Frame(master)                                                   # Frame Show his name
+            self.frameNome = Frame(master, bg ="#4682B4")                                                   # Frame Show his name
             self.frameNome.pack(side=TOP, fill="both")
             
-            self.lbNomeOutro = Label(self.frameNome, text="Nome Outro", bg="#ff71ff")
+            self.lbNomeOutro = Label(self.frameNome, text="Nome Outro", bg="#B0C4DE")
             self.lbNomeOutro.pack(fill=X, pady=5)
 
-            self.frameShowMessage = Frame(master, bg="#ff71ff", relief=FLAT)             # Show Message
+            self.frameShowMessage = Frame(master, bg="#B0C4DE", relief=FLAT)             # Show Message
             self.frameShowMessage.pack(side=TOP, fill="both")
 
            # ************************************************
@@ -165,7 +164,7 @@ class Aplicacao ():
                 print(x)       
 
                 # Mostrar  
-                labelMessage = Label(self.frame, text=x, anchor=E, wraplength=200, bg="#fdc5f8", width=63)
+                labelMessage = Label(self.frame, text=x.capitalize(), anchor=E, wraplength=200, bg="#4682B4", width=63)
                 labelMessage.pack(fill="both", padx=5, pady=10, ipadx=10, ipady=10)
 
                 try:
@@ -213,16 +212,16 @@ class Aplicacao ():
       
            # ************************************************            
             def myfunction(event):
-                canvas.configure(scrollregion=canvas.bbox("all"),width=550,height=470, bg="#ffe2fc")
+                canvas.configure(scrollregion=canvas.bbox("all"),width=550,height=470, bg="#B0C4DE")
                 
            # ************************************************
            
-            self.myframe=Frame(master,relief=FLAT, bg="#ffe2fc")
+            self.myframe=Frame(master,relief=FLAT, bg="#B0C4DE")
             self.myframe.pack()         
         
-            canvas=Canvas(self.myframe,width=550,height=470, bg="#ffe2fc")
-            self.frame=Frame(canvas, bg="#ffe2fc")
-            myscrollbar=Scrollbar(self.myframe,orient="vertical",command=canvas.yview, bg="#ff71ff")
+            canvas=Canvas(self.myframe,width=550,height=470, bg="#B0C4DE")
+            self.frame=Frame(canvas, bg="#B0C4DE")
+            myscrollbar=Scrollbar(self.myframe,orient="vertical",command=canvas.yview, bg="#B0C4DE")
             canvas.configure(yscrollcommand=myscrollbar.set)
 
             myscrollbar.pack(side="right",fill="y")
@@ -231,13 +230,13 @@ class Aplicacao ():
             self.frame.bind("<Configure>",myfunction)
     
 
-            self.labelMessage = Label(self.frameShowMessage, text="Sessão de chat criptografado ponta a ponta", wraplength=250, bg="#ffe2fc")
+            self.labelMessage = Label(self.frameShowMessage, text="Sessão de chat criptografado ponta a ponta", wraplength=250, bg="#87CEFA")
             self.labelMessage.pack(fill=X, padx=5, pady=10, ipadx=5, ipady=10)
 
-            self.frameShowInput = Frame(master, bg="#ff71ff")                         # Show Input 
+            self.frameShowInput = Frame(master, bg="#B0C4DE")                         # Show Input 
             self.frameShowInput.pack(side=BOTTOM, fill="both")
 
-            self.message = Entry(self.frameShowInput, borderwidth=0, insertbackground="lightgray", bg="#ffe2fc")
+            self.message = Entry(self.frameShowInput, borderwidth=0, insertbackground="lightgray", bg="#4682B4")
             self.message.focus_set()
             self.message.bind("<Return>", enviarMensagens)
             self.message.pack(fill=X, padx=20, pady=10)
@@ -247,20 +246,20 @@ class Aplicacao ():
             
         # ************************************************
         # Nome
-        self.frameUm_nome = Frame(master, bg="#ff71ff")                      # Frame M                                                                                                              
+        self.frameUm_nome = Frame(master, bg="#87CEEB")                      # Frame M                                                                                                              
         self.frameUm_nome.pack(fill="both", pady=250)
 
         # Label + Entry
-        self.lb1 = Label(self.frameUm_nome, text = "Open : "+ horario() + ' s', anchor=W, fg="#fff", bg="#ff71ff").pack(fill=X)
-        self.lb2 = Label(self.frameUm_nome, text = "Nome : ", anchor=W, fg="#fff", bg="#ff71ff").pack(fill=X, padx=150)
+        self.lb1 = Label(self.frameUm_nome, text = "Open : "+ horario() + ' s', anchor=W, fg="#fff", bg="#87CEEB").pack(fill=X)
+        self.lb2 = Label(self.frameUm_nome, text = "Nome : ", anchor=W, fg="#fff", bg="#87CEEB").pack(fill=X, padx=150)
         
-        self.ed2 = Entry(self.frameUm_nome, width=30, borderwidth=0, insertbackground="lightgray", bg="#ff71ff", fg="#fff")
+        self.ed2 = Entry(self.frameUm_nome, width=30, borderwidth=0, insertbackground="lightgray", bg="#87CEEB", fg="#fff")
         self.ed2.focus_set()
         self.ed2.bind("<Return>", avancar)
         self.ed2.pack(pady=5)
 
 root = Tk()
 root.geometry("550x620+250+80")
-root.configure(background="#ffe2fc")
+root.configure(background="#4682B4")
 Aplicacao(root)
 root.mainloop()  
