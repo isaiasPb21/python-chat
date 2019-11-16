@@ -210,22 +210,22 @@ class Aplicacao ():
       
            # ************************************************            
             def myfunction(event):
-                canvas.configure(scrollregion=canvas.bbox("all"),width=550,height=470, bg="#ffe2fc")
+                canvas.configure(scrollregion=canvas.bbox("all"),width=550,height=470, bg="#ffe2fc")  # evento que permite o rolamento do scrolllbar
                 
            # ************************************************
            
-            self.myframe=Frame(master,relief=FLAT, bg="#ffe2fc")
+            self.myframe=Frame(master,relief=FLAT, bg="#ffe2fc") # frame que será inserido o canvas
             self.myframe.pack()         
         
-            canvas=Canvas(self.myframe,width=550,height=470, bg="#ffe2fc")
-            self.frame=Frame(canvas, bg="#ffe2fc")
-            myscrollbar=Scrollbar(self.myframe,orient="vertical",command=canvas.yview, bg="#ff71ff")
-            canvas.configure(yscrollcommand=myscrollbar.set)
+            canvas=Canvas(self.myframe,width=550,height=470, bg="#ffe2fc") # criação do canvas
+            self.frame=Frame(canvas, bg="#ffe2fc") #frame pertencente ao canvas, dentro do canvas
+            myscrollbar=Scrollbar(self.myframe,orient="vertical",command=canvas.yview, bg="#ff71ff") # criando uma scrollbar
+            canvas.configure(yscrollcommand=myscrollbar.set) #setando o movimento da scrollbar
 
-            myscrollbar.pack(side="right",fill="y")
-            canvas.pack(side="left")
-            canvas.create_window((0,0),window=self.frame,anchor=NW)
-            self.frame.bind("<Configure>",myfunction)
+            myscrollbar.pack(side="right",fill="y") # posicionando o scrollbar
+            canvas.pack(side="left")# posicionando o canvas
+            canvas.create_window((0,0),window=self.frame,anchor=NW)# criando o canvas
+            self.frame.bind("<Configure>",myfunction) # ligando o evento "<Configure>", através do bind, a função myfunction
     
 
             self.labelMessage = Label(self.frameShowMessage, text="Sessão de chat criptografado ponta a ponta", wraplength=250, bg="#ffe2fc")
