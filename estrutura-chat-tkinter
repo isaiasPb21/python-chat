@@ -88,7 +88,7 @@ class Aplicacao ():
             serv_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             serv_socket.bind(add)
             serv_socket.listen(10)
-            enviarChaves(5)
+            enviarChaves(5)                                                             # inicia a função enviar chaves, que envia chaves e nome
             while True:                                                                        # mantém, sempre executando
                  global outro_chaveE, outro_chaveN                      # definindo variaveis globais, para se utilizar em outro trecho
                  con, cliente = serv_socket.accept()                      # aceitando conexão
@@ -109,37 +109,37 @@ class Aplicacao ():
                      self.lbNomeOutro["text"] = nomeOutro                    # colocando o nome recebido no topo da janela
                      
                  else :
-                     recebe = recebe.split('_')
+                     recebe = recebe.split('_')                                            # split, na mensagem recebida
 
-                     recebeInt = []
+                     recebeInt = []                                                                 # listas que armazenam os dados codificados
                      codificadoRsaRecebimento = []
                      preCodificadoRecebimento = []
 
-                     for i in  recebe:
+                     for i in  recebe:                                                               # transformando os caracteres recebidos em string para inteiro
                          aux0 = int(i)
-                         recebeInt.append(aux0)
-                         print(recebeInt)  #                        
+                         recebeInt.append(aux0)                                                
                       
                     # -- Decodificacao
-                     for i in recebeInt:
+                     for i in recebeInt:                                                            #  utilizando a minha_chaveD, para decodificar a mensagem
                          aux1 = (i ** minha_chaveD) % minha_chaveN
                          codificadoRsaRecebimento.append(aux1)
                          print(codificadoRsaRecebimento)  #
                          
                     # -- des pré Codificação
-                     for i in codificadoRsaRecebimento:
+                     for i in codificadoRsaRecebimento:                           # decodificando os pré codificados
                          aux2 = alfabeto[i // 10]
                          preCodificadoRecebimento.append(aux2)
                          print(preCodificadoRecebimento)   #
 
-                    # -- Reajuntando a mensagem
+                    # -- Reajuntando a mensagem                                             
                      mensagemOriginal = ''.join(preCodificadoRecebimento)
                      print('Mensagem Original : ', mensagemOriginal.capitalize())   #'''
-               
+
+                     # -- Mostrando na tela, no frame "frame"
                      labelMessage2 = Label(self.frame, text=mensagemOriginal.capitalize(), anchor=W, wraplength=200, bg="#faa6f4", width=63)
                      labelMessage2.pack(fill="both", padx=5, pady=10, ipadx=5, ipady=10)   
-                 #labelMessage2 = Label(self.frame, text=recebe, anchor=W, wraplength=200, bg="#faa6f4", width=63)
-                 #labelMessage2.pack(fill="both", padx=5, pady=10, ipadx=5, ipady=10)   
+
+
 
         # ************************************************
         def avancar(event):
