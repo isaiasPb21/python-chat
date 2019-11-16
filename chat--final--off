@@ -66,6 +66,7 @@ class Aplicacao ():
                time.sleep(delay)  
                clientSocket.connect(add)   
                y = '#1-' + str(minha_chaveE) + "=" + str(minha_chaveN) + '+' + nome + '*'
+               
                clientSocket.sendto(y.encode(), (ip, port))   
                print('Chaves que foi enviada' + y)
                clientSocket.close()
@@ -105,9 +106,38 @@ class Aplicacao ():
                      print('Nome : ', nomeOutro)
 
                      self.lbNomeOutro["text"] = nomeOutro
-                     
-                 labelMessage2 = Label(self.frame, text=recebe, anchor=W, wraplength=200, bg="#faa6f4", width=63)
-                 labelMessage2.pack(fill="both", padx=5, pady=10, ipadx=5, ipady=10)   
+                 else :
+                     recebe = recebe.split('_')
+
+                     recebeInt = []
+                     codificadoRsaRecebimento = []
+                     preCodificadoRecebimento = []
+
+                     for i in  recebe:
+                         aux0 = int(i)
+                         recebeInt.append(aux0)
+                         print(recebeInt)  #                        
+                      
+                    # -- Decodificacao
+                     for i in recebeInt:
+                         aux1 = (i ** minha_chaveD) % minha_chaveN
+                         codificadoRsaRecebimento.append(aux1)
+                         print(codificadoRsaRecebimento)  #
+                         
+                    # -- des pré Codificação
+                     for i in codificadoRsaRecebimento:
+                         aux2 = alfabeto[i // 10]
+                         preCodificadoRecebimento.append(aux2)
+                         print(preCodificadoRecebimento)   #
+
+                    # -- Reajuntando a mensagem
+                     mensagemOriginal = ''.join(preCodificadoRecebimento)
+                     print('Mensagem Original : ', mensagemOriginal.capitalize())   #'''
+               
+                     labelMessage2 = Label(self.frame, text=mensagemOriginal.capitalize(), anchor=W, wraplength=200, bg="#faa6f4", width=63)
+                     labelMessage2.pack(fill="both", padx=5, pady=10, ipadx=5, ipady=10)   
+                 #labelMessage2 = Label(self.frame, text=recebe, anchor=W, wraplength=200, bg="#faa6f4", width=63)
+                 #labelMessage2.pack(fill="both", padx=5, pady=10, ipadx=5, ipady=10)   
 
         # ************************************************
         def avancar(event):
