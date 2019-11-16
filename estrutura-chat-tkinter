@@ -227,20 +227,23 @@ class Aplicacao ():
             canvas.create_window((0,0),window=self.frame,anchor=NW)# criando o canvas
             self.frame.bind("<Configure>",myfunction) # ligando o evento "<Configure>", através do bind, a função myfunction
     
-
+            # Mensagem apresentada ao usuário, no topo da tela
             self.labelMessage = Label(self.frameShowMessage, text="Sessão de chat criptografado ponta a ponta", wraplength=250, bg="#ffe2fc")
             self.labelMessage.pack(fill=X, padx=5, pady=10, ipadx=5, ipady=10)
 
-            self.frameShowInput = Frame(master, bg="#ff71ff")                         # Show Input 
+            # Frame que conté, o campo de inserção das mensagens
+            self.frameShowInput = Frame(master, bg="#ff71ff")                        
             self.frameShowInput.pack(side=BOTTOM, fill="both")
 
+            # Campo de inserção da mensagem, 'Entry', dizendo a qual função será chamada, e qual evento
             self.message = Entry(self.frameShowInput, borderwidth=0, insertbackground="lightgray", bg="#ffe2fc")
-            self.message.focus_set()
-            self.message.bind("<Return>", enviarMensagens)
-            self.message.pack(fill=X, padx=20, pady=10)
+            self.message.focus_set() # indicando foco automático
+            self.message.bind("<Return>", enviarMensagens) # evento, função
+            self.message.pack(fill=X, padx=20, pady=10) # posicionando o campo
 
+            # criando um Thread para executar a função receber, de forma paralela a execução do programa
             funcao1 = Thread (target=recebeMensagem) 
-            funcao1.start()
+            funcao1.start() # iniciando a execução do Thread
             
         # ************************************************
         # Nome
