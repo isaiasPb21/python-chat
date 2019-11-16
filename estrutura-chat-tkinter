@@ -81,35 +81,33 @@ class Aplicacao ():
         # ************************************************
         # ************************************************
         def recebeMensagem ():
-            host = '192.168.15.8'
-            port = 2121
-            add = (host, port)   
-            serv_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            host = '192.168.15.8'                                                    # ip, a receber os dados
+            port = 2121                                                                    # porta ser utilizada 
+            add = (host, port)                                                         # tupla, contendo o ip e a porta      
+            serv_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
             serv_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             serv_socket.bind(add)
             serv_socket.listen(10)
             enviarChaves(5)
-            while True:
-                 global outro_chaveE, outro_chaveN
-                 con, cliente = serv_socket.accept()
+            while True:                                                                        # mantém, sempre executando
+                 global outro_chaveE, outro_chaveN                      # definindo variaveis globais, para se utilizar em outro trecho
+                 con, cliente = serv_socket.accept()                      # aceitando conexão
                  recebe = con.recv(2024)
-                 recebe = recebe.decode()  
-                 print('Mensagem Recebida : ', recebe)   #
+                 recebe = recebe.decode()                                       # decodificando de bytes para caracteres               
                  
-                 if (recebe[0] == '#') and (recebe[1] == '1') and (recebe[2] == '-'):
-                     print('Ow shit')
-                     sliceKeyE = recebe.index('=')
-                     outro_chaveE = recebe[3:sliceKeyE]
+                 if (recebe[0] == '#') and (recebe[1] == '1') and (recebe[2] == '-'):  # Verificando se a mensagem esta marcada                     
+                     sliceKeyE = recebe.index('=')                                    # cortando a mensagem marcada - outro_chaveE
+                     outro_chaveE = recebe[3:sliceKeyE]                      # definindo oque será utilizada - outro_chaveE
                       
-                     sliceKeyN = recebe.index('+')
-                     outro_chaveN = recebe[sliceKeyE+1:sliceKeyN]
-                     print('Chaves Recebidas E {}, N {}'.format(outro_chaveE,outro_chaveN))
+                     sliceKeyN = recebe.index('+')                                    # cortando a mensagem marcada - outro_chaveN
+                     outro_chaveN = recebe[sliceKeyE+1:sliceKeyN]  # definindo oque será utilizada - outro_chaveN
 
-                     sliceName = recebe.index('*')
-                     nomeOutro = recebe[sliceKeyN+1:sliceName]
+                     sliceName = recebe.index('*')                                    # cortando a mensagem marcada - nomeOutro
+                     nomeOutro = recebe[sliceKeyN+1:sliceName]      # definindo oque será utilizada - nomeOutro
                      print('Nome : ', nomeOutro)
 
-                     self.lbNomeOutro["text"] = nomeOutro
+                     self.lbNomeOutro["text"] = nomeOutro                    # colocando o nome recebido no topo da janela
+                     
                  else :
                      recebe = recebe.split('_')
 
