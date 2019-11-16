@@ -158,17 +158,17 @@ class Aplicacao ():
             self.frameShowMessage.pack(side=TOP, fill="both")
 
            # ************************************************
-            def enviarMensagens(event):
-                global outro_chaveE, outro_chaveN
+            def enviarMensagens(event):                              # função chamada por evento  "<Return>", enter pressionado
+                global outro_chaveE, outro_chaveN                # indicando qua as variaveis setadas são globais
 
-                # Mensagem
-                x = self.message.get().lower()
+                # Mensagem      
+                x = self.message.get().lower()                          # pegando e armazenando a mensagem 
                 print(x)       
 
-                # Mostrar  
+                # Mostrando na tela   
                 labelMessage = Label(self.frame, text=x, anchor=E, wraplength=200, bg="#fdc5f8", width=63)
                 labelMessage.pack(fill="both", padx=5, pady=10, ipadx=10, ipady=10)
-                try:
+                try:                                                                            # tentativa, caso não funcione, except executado        
                     print('Enviando')                   
                     ip = '192.168.15.9'
                     port = 2121
@@ -177,36 +177,34 @@ class Aplicacao ():
                     clientSocket.connect(add)
 
                     # Chaves
-                    outro_chaveE = int(outro_chaveE)
-                    outro_chaveN = int(outro_chaveN)
-                    print('Area de envio : chave E {}, chave N : {}'.format(outro_chaveE,outro_chaveN))                    
+                    outro_chaveE = int(outro_chaveE)                #  transformando as variaveis recebidas anteriormente em inteiros
+                    outro_chaveN = int(outro_chaveN)                   
       
                      # Pré Cifragem   
-                    preCodificadoEnvio = []      
+                    preCodificadoEnvio = []                                    # listas que armazenam os dados codificados
                     codificadoRsaEnvio = []
                     codificadoRsaStringEnvio = []
            
-                    for i in x:
+                    for i in x:                                                                # armazenando os itens pre codificados  
                        aux3 = alfabeto.index(i) * 10
                        preCodificadoEnvio.append(aux3)
 
                     # Cifragem
-                    for i in preCodificadoEnvio:
+                    for i in preCodificadoEnvio:                               # armazenando os itens codificados
                        aux4 = (i ** outro_chaveE) % outro_chaveN
                        codificadoRsaEnvio.append(aux4)
 
-                    for i in codificadoRsaEnvio:
+                    for i in codificadoRsaEnvio:                               # transformando os itens em strings para envio
                        aux5 = str(i)
                        codificadoRsaStringEnvio.append(aux5)
           
-                    codificadoRsaEnvio = '_'.join(codificadoRsaStringEnvio)    
-
-                    print("Enviando ... ")
-                    clientSocket.sendto(codificadoRsaEnvio.encode(), (ip, port))
-                    print("Enviado")
-                    self.message.delete(0, END)
+                    codificadoRsaEnvio = '_'.join(codificadoRsaStringEnvio)              # juntando os itens da lista em uma string
+                   
+                    clientSocket.sendto(codificadoRsaEnvio.encode(), (ip, port))    #  enviando a sting             
+                    self.message.delete(0, END)                                                              # resentando o campo 'Entry' após envio
+                    
                 except ConnectionRefusedError:
-                    print("Não foi possivel enviar sua mensagem")
+                    print("Não foi possivel enviar sua mensagem")                               # tratamento de excessões
 
                 self.message.delete(0, END)
       
