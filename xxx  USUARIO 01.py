@@ -111,10 +111,10 @@ class Aplicacao ():
                      print('Chaves Recebidas E {}, N {}'.format(outro_chaveE,outro_chaveN))
 
                      sliceName = recebe.index('*')
-                     nomeOutro = recebe[sliceKeyN+1:sliceName]
-                     print('Nome : ', nomeOutro)
+                     self.nomeOutro = recebe[sliceKeyN+1:sliceName]
+                     print('Nome : ', self.nomeOutro)
 
-                     self.lbNomeOutro["text"] = nomeOutro
+                     
                  else :
                      recebe = recebe.split('_')
 
@@ -171,6 +171,8 @@ class Aplicacao ():
 
             self.frameShowMessage = Frame(master, bg="#B0C4DE", relief=FLAT)             # Show Message
             self.frameShowMessage.pack(side=TOP, fill="both")
+
+            self.lbNomeOutro["text"] = self.nomeOutro
 
            # ************************************************
             def enviarMensagens(event):
