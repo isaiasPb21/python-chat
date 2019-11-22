@@ -116,7 +116,6 @@ class Aplicacao ():
                      sliceName = recebe.index('*')
                      self.nomeOutro = recebe[sliceKeyN+1:sliceName]
                      print('Nome : ', self.nomeOutro)
-
                      
                  else :
                      recebe = recebe.split('_')
@@ -281,4 +280,4 @@ root = Tk()
 root.geometry("550x620+250+80")
 root.configure(background="#4682B4")
 Aplicacao(root)
-root.mainloop()  
+root.mainloop()
