@@ -6,9 +6,7 @@ import socket
 import time
 import random
 
-
 contx = 0
-
 
 class Aplicacao ():
     def __init__(self, master=None):        
@@ -17,12 +15,14 @@ class Aplicacao ():
         alfabeto = ['ª','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','â','ã','á','à','é','ç','õ','0','1','2','3','4','5','6','7','8','9',' ',',','.','+','-','*',':','/','\\','!','@','#','$','%','&','(',')']
         
         # ********************************************************************************************************************** FUNÇÕES
+        ''' Horário do sistema '''
         def horario():
             horario = datetime.now()
             horario = horario.strftime('%H:%M %Y %S')
             return horario
         # ************************************************
         # ************************************************
+        ''' Calculo das chaves '''
         def calcAlea (fim=1000):                 
             aleatorio = random.randint(0,fim)
             return aleatorio 
@@ -59,8 +59,9 @@ class Aplicacao ():
 
         print('P {} * Q {} * N {} * D {} * E {}'.format(numP, numQ, minha_chaveN, minha_chaveD, minha_chaveE))
         # ************************************************
-   
-        def enviarChaves():
+        # ************************************************
+        ''' Envia as chaves de forma 'automática'  '''
+        def enviarChaves():            
             global contx
             contx += 1
             time.sleep(3)
@@ -84,6 +85,7 @@ class Aplicacao ():
 
         # ************************************************
         # ************************************************
+        ''' Recebe as mensagens, usando Thread '''
         def recebeMensagem ():
             print('Recebimento aberto')
             host = '192.168.15.8'
@@ -100,7 +102,8 @@ class Aplicacao ():
                  recebe = con.recv(2024)
                  recebe = recebe.decode()  
                  print('Mensagem Recebida : ', recebe)   #
-                 
+
+                 ''' Separando as chaves recebidas e o nome. Através de marcadores : '#' '1' '-'  '''
                  if (recebe[0] == '#') and (recebe[1] == '1') and (recebe[2] == '-'):
                      print('Ow shit')
                      sliceKeyE = recebe.index('=')
@@ -141,40 +144,41 @@ class Aplicacao ():
 
                     # -- Reajuntando a mensagem
                      mensagemOriginal = ''.join(preCodificadoRecebimento)
-                     print('Mensagem Original : ', mensagemOriginal.capitalize())   #'''
+                     print('Mensagem Original : ', mensagemOriginal.capitalize())                     
                
+                     # Após recebimento, exibe na tela o conteúdo da mensagem decriptografado 
                      labelMessage2 = Label(self.frame, text=mensagemOriginal.capitalize(), anchor=W, wraplength=200, bg="#B0C4DE", width=63)
-                     labelMessage2.pack(fill="both", padx=5, pady=10, ipadx=5, ipady=10)   
-                 #labelMessage2 = Label(self.frame, text=recebe, anchor=W, wraplength=200, bg="#faa6f4", width=63)
-                 #labelMessage2.pack(fill="both", padx=5, pady=10, ipadx=5, ipady=10)   
-
+                     labelMessage2.pack(fill="both", padx=5, pady=10, ipadx=5, ipady=10)  
         # ************************************************
+        ''' Iniciando o Thread responsável por executar a função recebimento '''
         funcao1 = Thread (target=recebeMensagem) 
-        funcao1.start()
-
-        
+        funcao1.start()        
         # ************************************************
-        def avancar(event):
-        
+        # ************************************************
+        ''' Evento, ao pressionar 'Enter', pelo Entry da tela inicial '''
+        def avancar(event):   
             enviarChaves()
             print('Tentativas : ', contx)
         
-            print('Avancar')
-            self.frameUm_nome["bg"] = "yellow"
+            print('Avancar')      
             self.frameUm_nome.pack_forget()
-            
-            self.frameNome = Frame(master, bg ="#4682B4")                                                   # Frame Show his name
+
+            # Frame exibe o nome do outro usuário
+            self.frameNome = Frame(master, bg ="#4682B4")                                                     # Frame Show his name
             self.frameNome.pack(side=TOP, fill="both")
-            
+
+            # Label que receberá nome do outro usuário
             self.lbNomeOutro = Label(self.frameNome, text="Nome Outro", bg="#B0C4DE")
             self.lbNomeOutro.pack(fill=X, pady=5)
 
+            # Exibe mensagens
             self.frameShowMessage = Frame(master, bg="#B0C4DE", relief=FLAT)             # Show Message
             self.frameShowMessage.pack(side=TOP, fill="both")
 
+            # Após receber nome, o coloca na label 'lbNomeOutro'
             self.lbNomeOutro["text"] = self.nomeOutro
-
-           # ************************************************
+            # ************************************************
+            ''' Enviar mensagens, após 'Enter' pressionado pelo Entry da tela de envio '''
             def enviarMensagens(event):
                 global outro_chaveE, outro_chaveN
 
@@ -224,14 +228,12 @@ class Aplicacao ():
                 except ConnectionRefusedError:
                     print("Não foi possivel enviar sua mensagem")
 
-                self.message.delete(0, END)
-      
-           # ************************************************            
+                self.message.delete(0, END)      
+            # ************************************************                                              Comando Scroolbar
+            ''' Comando Scrollbar, após rolagem '''
             def myfunction(event):
-                canvas.configure(scrollregion=canvas.bbox("all"),width=550,height=470, bg="#B0C4DE")
-                
-           # ************************************************
-           
+                canvas.configure(scrollregion=canvas.bbox("all"),width=550,height=470, bg="#B0C4DE")                
+            # ************************************************                                              Scroolbar           
             self.myframe=Frame(master,relief=FLAT, bg="#B0C4DE")
             self.myframe.pack()         
         
@@ -243,39 +245,37 @@ class Aplicacao ():
             myscrollbar.pack(side="right",fill="y")
             canvas.pack(side="left")
             canvas.create_window((0,0),window=self.frame,anchor=NW)
-            self.frame.bind("<Configure>",myfunction)
-    
-
+            self.frame.bind("<Configure>",myfunction)    
+            # ************************************************
+            # Mensagem aos usuários
             self.labelMessage = Label(self.frameShowMessage, text="Sessão de chat criptografado ponta a ponta", wraplength=250, bg="#87CEFA")
             self.labelMessage.pack(fill=X, padx=5, pady=10, ipadx=5, ipady=10)
 
+            # Frame com Entry
             self.frameShowInput = Frame(master, bg="#B0C4DE")                         # Show Input 
             self.frameShowInput.pack(side=BOTTOM, fill="both")
 
+            # Entry - para digitação
             self.message = Entry(self.frameShowInput, borderwidth=0, insertbackground="lightgray", bg="#4682B4")
             self.message.focus_set()
             self.message.bind("<Return>", enviarMensagens)
             self.message.pack(fill=X, padx=20, pady=10)
-
-
-        # ************************************************
-
-            
-
+        # ************************************************                                                  Widgets Tela 1          
         # Nome
-        self.frameUm_nome = Frame(master, bg="#87CEEB")                      # Frame M                                                                                                              
+        self.frameUm_nome = Frame(master, bg="#87CEEB")                                            # Frame Um_nome                                                                                                              
         self.frameUm_nome.pack(fill="both", pady=250)
 
-        # Label + Entry
-        self.lb1 = Label(self.frameUm_nome, text = "Open : "+ horario() + ' s', anchor=W, fg="#fff", bg="#87CEEB").pack(fill=X)
-        self.lb2 = Label(self.frameUm_nome, text = "Nome : ", anchor=W, fg="#fff", bg="#87CEEB").pack(fill=X, padx=150)
-        
+        # Label
+        self.lb1 = Label(self.frameUm_nome, text = "Open : "+ horario() + ' s', anchor=W, fg="#fff", bg="#87CEEB")
+        self.lb1.pack(fill=X)
+        self.lb2 = Label(self.frameUm_nome, text = "Nome : ", anchor=W, fg="#fff", bg="#87CEEB")
+        self.lb2.pack(fill=X, padx=150)
+
+        # Entry
         self.ed2 = Entry(self.frameUm_nome, width=30, borderwidth=0, insertbackground="lightgray", bg="#87CEEB", fg="#fff")
         self.ed2.focus_set()
         self.ed2.bind("<Return>", avancar)
         self.ed2.pack(pady=5)
-
-
 
 root = Tk()
 root.geometry("550x620+250+80")
