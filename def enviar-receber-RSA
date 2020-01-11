@@ -102,10 +102,5 @@ mensagem.pack(side=LEFT, padx=20, pady= 15)
 enviar = Button(frameInside, width=5, highlightcolor="green", text="enviar", command=enviarMensagens) 
 enviar.pack(side=RIGHT)
 
-
-
-
-
-
 root.geometry("500x500")
 root.mainloop()
